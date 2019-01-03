@@ -2,7 +2,7 @@ import urllib.request
 import sys
 import time
 from os import path
-from seriesdw import utility
+from os import popen
 import argparse
 
 
@@ -17,6 +17,13 @@ def arguments():
 
     args = parser.parse_args()
     return args
+
+
+def get_terminal_length():
+    """Return the length of the terminal."""
+    rows, cols = popen('stty size', 'r').read().split()
+
+    return int(cols)
 
 
 def get_name(URL):
@@ -54,7 +61,6 @@ def format_size(size):
         dw_unit = "kb's"
 
     return (formatted_size, dw_unit)
-
 
 
 def download(url, des=None):
@@ -129,7 +135,7 @@ def download(url, des=None):
             basename = path.basename(des)
 
             # Calculate amount of space req in between
-            length = utility.get_terminal_length()
+            length = get_terminal_length()
 
             stuff_len = len(basename) + 13 + 17 + 7 + 26 + 3
             space = 0
