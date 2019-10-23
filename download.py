@@ -28,11 +28,11 @@ class Download:
         self.des = des
         self.headers = {}
         self.f_size = 0
-        # TODO: Rename private functions
 
     def _build_headers(self, rem):
         """Build headers according to requirement."""
         self.headers = {"Range": "bytes={}-".format(rem)}
+        print("Trying to resume download at: {} bytes".format(rem))
 
     def _preprocess_conn(self):
         """Make necessary things for the connection."""
@@ -58,6 +58,12 @@ class Download:
                 self.des = path.join(self.des, self._get_name())
         else:
             self.des = self._get_name()
+
+        # Put a check to see if file already exists.
+        # Try to resume it if that's true
+        if path.exists(self.des):
+            rem_size = path.getsize(self.des)
+            self._build_headers(rem_size)
 
     def _get_name(self):
         """Try to get the name of the file from the URL."""
@@ -193,6 +199,7 @@ class Download:
             print()
             return True
         except KeyboardInterrupt:
+            sys.stdout.flush()
             print("Keyboard Interrupt passed. Exitting peacefully.")
             exit()
         except Exception as e:
