@@ -70,7 +70,7 @@ def download(url, des=None):
             if path.isdir(des):
                 des = path.join(des, get_name(url))
         else:
-            des = get_name(URL)
+            des = get_name(url)
 
         # Download files with a progressbar showing the percentage
         try:
@@ -157,6 +157,9 @@ def download(url, des=None):
 
         print()
         return True
+    except KeyboardInterrupt:
+        print("Keyboard Interrupt passed. Exitting peacefully.")
+        exit()
     except Exception as e:
         print("ERROR: {}".format(e))
         return False
