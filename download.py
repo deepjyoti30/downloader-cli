@@ -5,7 +5,7 @@ from os import path
 from os import popen
 import argparse
 
-import traceback
+# import traceback ## Required to debug at times.
 
 
 def arguments():
@@ -106,7 +106,7 @@ class Download:
 
         return time_left, time_unit
 
-    def get_speed_n_time(self, file_size_dl, beg_time, cur_time):
+    def _get_speed_n_time(self, file_size_dl, beg_time, cur_time):
         """Return the speed and time depending on the passed arguments."""
 
         # Calculate speed
@@ -158,7 +158,7 @@ class Download:
                 percent = ''
 
                 if self.f_size is not None:
-                    speed, time_left, time_unit = self.get_speed_n_time(
+                    speed, time_left, time_unit = self._get_speed_n_time(
                                                     file_size_dl,
                                                     beg_time,
                                                     cur_time=time.time()
