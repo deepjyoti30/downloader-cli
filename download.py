@@ -112,11 +112,25 @@ class Download:
 
         return time_left, time_unit
 
+    def _format_speed(self, speed):
+        """Format the speed."""
+        if speed > 1024:
+            speed = speed / 1024
+            unit = "Mbps"
+        elif speed > (1024 * 1024):
+            speed = speed / (1024 * 1024)
+            unit = "Gbps"
+        else:
+            unit = "kbps"
+
+        return speed, unit
+
     def _get_speed_n_time(self, file_size_dl, beg_time, cur_time):
         """Return the speed and time depending on the passed arguments."""
 
         # Calculate speed
         speed = (file_size_dl / 1024) / (cur_time - beg_time)
+        speed, s_unit = self._format_speed(speed)
 
         # Calculate time left
         time_left = round(((self.f_size - file_size_dl) / 1024) / speed)
@@ -130,7 +144,34 @@ class Download:
             time_left = round(time_left / 60)
             time_unit = 'm'
 
-        return speed, time_left, time_unit
+        return speed, s_unit, time_left, time_unit
+
+    def _get_bar(self, status, length, percent):
+        """Calculate the progressbar depending on the length of terminal."""
+
+        map_bar = {
+                    20: r"|%-20s|",
+                    10: r"|%-10s|",
+                    5: r"|%-5s|",
+                    2: r"|%-2s|"
+        }
+        # Till now characters present is the length of status.
+        # length is the length of terminal.
+        # We need to decide how long our bar will be.
+        cur_len = len(status) + 2 + 6  # 2 for bar and 6 for percent
+
+        reduce_with_each_iter = 20
+        while reduce_with_each_iter > 0:
+            if cur_len + reduce_with_each_iter > length:
+                reduce_with_each_iter = int(reduce_with_each_iter / 2)
+            else:
+                break
+
+        if reduce_with_each_iter > 0:
+            status += map_bar[reduce_with_each_iter] % ("-" * int(percent / (100 / reduce_with_each_iter)))
+
+        status += r"%3.2f%%" % (percent)
+        return status
 
     def download(self):
         try:
@@ -164,7 +205,7 @@ class Download:
                 percent = ''
 
                 if self.f_size is not None:
-                    speed, time_left, time_unit = self._get_speed_n_time(
+                    speed, s_unit, time_left, time_unit = self._get_speed_n_time(
                                                     file_size_dl,
                                                     beg_time,
                                                     cur_time=time.time()
@@ -187,7 +228,11 @@ class Download:
 
                 f_size_disp, dw_unit = self._format_size(file_size_dl)
                 if self.f_size is not None:
-                    status = r"%s %s %0.2f %s |%d kbps| ETA: %s %s |%-20s| |%3.2f%%|" % (self.basename, space * " ", f_size_disp, dw_unit, speed, time_left, time_unit, "-" * int(percent / 5), percent)
+                    status = r"%s %s" % (self.basename, space * " ")
+                    status += r"%0.2f %s " % (f_size_disp, dw_unit)
+                    status += r"|%d %s|" % (speed, s_unit)
+                    status += r"ETA: %s %s" % (time_left, time_unit)
+                    status = self._get_bar(status, length, percent)
                 else:
                     status = r"%s %s %0.2f %s" %(self.basename, space * " ", f_size_disp, dw_unit)
                 sys.stdout.write('\r')
