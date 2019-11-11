@@ -36,6 +36,21 @@ class Download:
         self.headers = {"Range": "bytes={}-".format(rem)}
         print("Trying to resume download at: {} bytes".format(rem))
 
+    def _parse_exists(self):
+        """This function should be called if the file already exists.
+
+        In that case there are two possibilities, it's partially downloaded
+        or the file already exists.
+        """
+        cur_size = path.getsize(self.des)
+        original_size = urllib.request.urlopen(self.URL).info()['Content-Length']
+
+        if cur_size < int(original_size):
+            self._build_headers(cur_size)
+        else:
+            print("The file already exists. Quitting..!")
+            exit(-1)
+
     def _preprocess_conn(self):
         """Make necessary things for the connection."""
         self.req = urllib.request.Request(url=self.URL, headers=self.headers)
@@ -64,8 +79,7 @@ class Download:
         # Put a check to see if file already exists.
         # Try to resume it if that's true
         if path.exists(self.des):
-            rem_size = path.getsize(self.des)
-            self._build_headers(rem_size)
+            self._parse_exists()
 
     def _get_name(self):
         """Try to get the name of the file from the URL."""
@@ -96,9 +110,6 @@ class Download:
             formatted_size /= 1024
 
         return (formatted_size, map_unit[no_iters])
-
-    def _get_size_orig_terms(self, size):
-        """Return the size in original files terms."""
 
     def _format_time(self, time_left):
         """Format the passed time depending."""
@@ -247,4 +258,4 @@ class Download:
 
 if __name__ == "__main__":
     args = arguments()
-    Download(args.URL, args.des).download()
+    Download(args.URL, args.des, "=", "-").download()
