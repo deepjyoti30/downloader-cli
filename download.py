@@ -23,11 +23,13 @@ def arguments():
 
 class Download:
 
-    def __init__(self, URL, des=None):
+    def __init__(self, URL, des=None, icon_done="▓", icon_left="░"):
         self.URL = URL
         self.des = des
         self.headers = {}
         self.f_size = 0
+        self.done_icon = icon_done
+        self.left_icon = icon_left
 
     def _build_headers(self, rem):
         """Build headers according to requirement."""
@@ -166,9 +168,9 @@ class Download:
                 break
 
         if reduce_with_each_iter > 0:
-            status += map_bar[reduce_with_each_iter] % ("-" * int(percent / (100 / reduce_with_each_iter)))
+            done = int(percent / (100 / reduce_with_each_iter))
+            status += "%s%s" % (self.done_icon * done, self.left_icon * (reduce_with_each_iter - done))
 
-        status += r"%-3d%%" % (int(percent))
         return status
 
     def download(self):
@@ -230,6 +232,7 @@ class Download:
                     status = r"%0.2f %s " % (f_size_disp, dw_unit)
                     status += r"| %-5s %s | " % (float("{0:.2f}".format(speed)), s_unit)
                     status += r"ETA: %s %s " % (time_left, time_unit)
+                    status += r"%-3d%% " % (int(percent))
                     status = self._get_bar(status, length, percent)
                 else:
                     status = r"%0.2f %s" %(f_size_disp, dw_unit)
@@ -252,4 +255,4 @@ class Download:
 
 if __name__ == "__main__":
     args = arguments()
-    Download(args.URL, args.des).download()
+    Download(args.URL, args.des, "#", " ").download()
