@@ -114,16 +114,14 @@ class Download:
 
     def _format_speed(self, speed):
         """Format the speed."""
-        if speed > 1024:
-            speed = speed / 1024
-            unit = "Mbps"
-        elif speed > (1024 * 1024):
-            speed = speed / (1024 * 1024)
-            unit = "Gbps"
-        else:
-            unit = "kbps"
+        unit = {0: 'Kb/s', 1: 'Mb/s', 2: 'Gb/s'}
 
-        return speed, unit
+        inc_with_iter = 0
+        while speed > 1000:
+            speed = speed / 1000
+            inc_with_iter += 1
+
+        return speed, unit[inc_with_iter]
 
     def _get_speed_n_time(self, file_size_dl, beg_time, cur_time):
         """Return the speed and time depending on the passed arguments."""
@@ -218,23 +216,23 @@ class Download:
                 # Calculate amount of space req in between
                 length = self._get_terminal_length()
 
-                stuff_len = len(self.basename) + 13 + 17 + 7 + 26 + 3
-                space = 0
+                # stuff_len = len(self.basename) + 13 + 17 + 7 + 26 + 3
+                """space = 0
 
                 if stuff_len < length:
                     space = length - stuff_len
                 elif stuff_len > length:
-                    self.basename = self.basename[:(length - stuff_len) - 2] + '..'
+                    self.basename = self.basename[:(length - stuff_len) - 2] + '..'"""
 
                 f_size_disp, dw_unit = self._format_size(file_size_dl)
                 if self.f_size is not None:
-                    status = r"%s %s" % (self.basename, space * " ")
-                    status += r"%0.2f %s " % (f_size_disp, dw_unit)
-                    status += r"|%d %s|" % (speed, s_unit)
-                    status += r"ETA: %s %s" % (time_left, time_unit)
+                    # status = r"%s %s" % (self.basename, space * " ")
+                    status = r"%0.2f %s " % (f_size_disp, dw_unit)
+                    status += r"| %-5s %s | " % (float("{0:.2f}".format(speed)), s_unit)
+                    status += r"ETA: %s %s " % (time_left, time_unit)
                     status = self._get_bar(status, length, percent)
                 else:
-                    status = r"%s %s %0.2f %s" %(self.basename, space * " ", f_size_disp, dw_unit)
+                    status = r"%0.2f %s" %(f_size_disp, dw_unit)
                 sys.stdout.write('\r')
                 sys.stdout.write(status)
                 sys.stdout.flush()
