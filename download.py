@@ -87,20 +87,15 @@ class Download:
         If its more than an 1 Mb then return the size in Mb's
         else return it in Kb's along with the unit.
         """
+        map_unit = {0: 'bytes', 1: "KB's", 2: "MB's", 3:"GB's"}
         formatted_size = size
-        dw_unit = 'bytes'
 
-        if formatted_size > (1024 * 1024 * 1024):
-            formatted_size = size / (1024 * 1024 * 1024)
-            dw_unit = "GB's"
-        elif formatted_size > (1024 * 1024):
-            formatted_size = size / (1024 * 1024)
-            dw_unit = "MB's"
-        elif formatted_size > 1024:
-            formatted_size = size / 1024
-            dw_unit = "kb's"
+        no_iters = 0
+        while formatted_size > 1024:
+            no_iters += 1
+            formatted_size /= 1024
 
-        return (formatted_size, dw_unit)
+        return (formatted_size, map_unit[no_iters])
 
     def _format_time(self, time_left):
         """Format the passed time depending."""
@@ -167,8 +162,15 @@ class Download:
             else:
                 break
 
-        status += "\033[1;34m"
+        # Add space.
+        space = length - (len(status) + 2 + reduce_with_each_iter)
+        status += r"%s" % (" " * space)
+
         if reduce_with_each_iter > 0:
+            # Make BOLD
+            status += "\033[1m"
+            # Add color.
+            status += "\033[1;34m"
             done = int(percent / (100 / reduce_with_each_iter))
             status += r"|%s%s|" % (self.done_icon * done, self.left_icon * (reduce_with_each_iter - done))
 
@@ -220,24 +222,16 @@ class Download:
                 # Calculate amount of space req in between
                 length = self._get_terminal_length()
 
-                # stuff_len = len(self.basename) + 13 + 17 + 7 + 26 + 3
-                """space = 0
-
-                if stuff_len < length:
-                    space = length - stuff_len
-                elif stuff_len > length:
-                    self.basename = self.basename[:(length - stuff_len) - 2] + '..'"""
-
                 f_size_disp, dw_unit = self._format_size(file_size_dl)
                 if self.f_size is not None:
                     # status = r"%s %s" % (self.basename, space * " ")
-                    status = r"%0.2f %s " % (f_size_disp, dw_unit)
-                    status += r"| %-5s %s || " % (float("{0:.2f}".format(speed)), s_unit)
+                    status = r"%-10s" % ("%0.2f %s" % (f_size_disp, dw_unit))
+                    status += r"| %-5s %s || " % ("%0.2f" % (speed), s_unit)
                     status += r"ETA: %s %s " % (time_left, time_unit)
-                    status += r"|| %-3d%% " % (int(percent))
+                    status += r"|| %-4s" % ("{}%".format(int(percent)))
                     status = self._get_bar(status, length, percent)
                 else:
-                    status = r"%0.2f %s" %(f_size_disp, dw_unit)
+                    status = r"%0.2f %s" % (f_size_disp, dw_unit)
                 sys.stdout.write('\r')
                 sys.stdout.write(status)
                 sys.stdout.flush()
@@ -251,10 +245,11 @@ class Download:
             print("Keyboard Interrupt passed. Exitting peacefully.")
             exit()
         except Exception as e:
+            nana
             print("ERROR: {}".format(e))
             return False
 
 
 if __name__ == "__main__":
     args = arguments()
-    Download(args.URL, args.des, "#", " ").download()
+    Download(args.URL, args.des).download()
