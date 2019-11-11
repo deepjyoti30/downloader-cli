@@ -87,7 +87,7 @@ class Download:
         If its more than an 1 Mb then return the size in Mb's
         else return it in Kb's along with the unit.
         """
-        map_unit = {0: 'bytes', 1: "KB's", 2: "MB's", 3:"GB's"}
+        map_unit = {0: 'bytes', 1: "KB's", 2: "MB's", 3: "GB's"}
         formatted_size = size
 
         no_iters = 0
@@ -96,6 +96,9 @@ class Download:
             formatted_size /= 1024
 
         return (formatted_size, map_unit[no_iters])
+
+    def _get_size_orig_terms(self, size):
+        """Return the size in original files terms."""
 
     def _format_time(self, time_left):
         """Format the passed time depending."""
@@ -145,6 +148,7 @@ class Download:
         """Calculate the progressbar depending on the length of terminal."""
 
         map_bar = {
+                    40: r"|%-40s|",
                     20: r"|%-20s|",
                     10: r"|%-10s|",
                     5: r"|%-5s|",
@@ -155,7 +159,7 @@ class Download:
         # We need to decide how long our bar will be.
         cur_len = len(status) + 2 + 4  # 2 for bar and 6 for percent
 
-        reduce_with_each_iter = 20
+        reduce_with_each_iter = 40
         while reduce_with_each_iter > 0:
             if cur_len + reduce_with_each_iter > length:
                 reduce_with_each_iter = int(reduce_with_each_iter / 2)
@@ -163,7 +167,7 @@ class Download:
                 break
 
         # Add space.
-        space = length - (len(status) + 2 + reduce_with_each_iter)
+        space = length - (len(status) + 2 + reduce_with_each_iter + 5)
         status += r"%s" % (" " * space)
 
         if reduce_with_each_iter > 0:
@@ -188,6 +192,7 @@ class Download:
             formatted_file_size, dw_unit = self._format_size(self.f_size)
             print("Size: {} {}".format(round(formatted_file_size), dw_unit))
             print("Saving as: {}".format(self.des))
+            self.orig_dw_unit = dw_unit
 
             file_size_dl = 0
             block_sz = 8192
@@ -225,11 +230,11 @@ class Download:
                 f_size_disp, dw_unit = self._format_size(file_size_dl)
                 if self.f_size is not None:
                     # status = r"%s %s" % (self.basename, space * " ")
-                    status = r"%-10s" % ("%0.2f %s" % (f_size_disp, dw_unit))
-                    status += r"| %-5s %s || " % ("%0.2f" % (speed), s_unit)
+                    status = r"%-9s" % ("%s %s" % (round(f_size_disp), dw_unit))
+                    status += r"| %-3s %s || " % ("%s" % (round(speed)), s_unit)
                     status += r"ETA: %s %s " % (time_left, time_unit)
-                    status += r"|| %-4s" % ("{}%".format(int(percent)))
                     status = self._get_bar(status, length, percent)
+                    status += r" %-4s" % ("{}%".format(int(percent)))
                 else:
                     status = r"%0.2f %s" % (f_size_disp, dw_unit)
                 sys.stdout.write('\r')
@@ -252,4 +257,4 @@ class Download:
 
 if __name__ == "__main__":
     args = arguments()
-    Download(args.URL, args.des).download()
+    Download(args.URL, args.des, "+", "-").download()
