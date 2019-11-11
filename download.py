@@ -167,10 +167,12 @@ class Download:
             else:
                 break
 
+        status += "\033[1;34m"
         if reduce_with_each_iter > 0:
             done = int(percent / (100 / reduce_with_each_iter))
-            status += "%s%s" % (self.done_icon * done, self.left_icon * (reduce_with_each_iter - done))
+            status += r"|%s%s|" % (self.done_icon * done, self.left_icon * (reduce_with_each_iter - done))
 
+        status += "\033[0m"
         return status
 
     def download(self):
