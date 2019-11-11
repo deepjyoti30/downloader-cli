@@ -12,10 +12,11 @@ def arguments():
     """Parse the arguments."""
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('URL', help="URL of the file",
-                        default=None, type=str)
+    parser.add_argument('URL', help="URL of the file",type=str)
     parser.add_argument('des', help="The name of the file\
-                        to be saved with.", default=None, nargs='?')
+                        to be saved with.", default=None, nargs="?")
+    parser.add_argument('-o', help="Overwrite if the file already exists\
+                        else, try to resume download.", action="store_true")
 
     args = parser.parse_args()
     return args
@@ -23,13 +24,21 @@ def arguments():
 
 class Download:
 
-    def __init__(self, URL, des=None, icon_done="▓", icon_left="░"):
+    def __init__(
+                self,
+                URL,
+                des=None,
+                overwrite=False,
+                icon_done="▓",
+                icon_left="░"
+            ):
         self.URL = URL
         self.des = des
         self.headers = {}
         self.f_size = 0
         self.done_icon = icon_done
         self.left_icon = icon_left
+        self.overwrite = overwrite
 
     def _build_headers(self, rem):
         """Build headers according to requirement."""
@@ -47,6 +56,9 @@ class Download:
 
         if cur_size < int(original_size):
             self._build_headers(cur_size)
+        elif self.overwrite:
+            print("Overwriting the file.")
+            return
         else:
             print("The file already exists. Quitting..!")
             exit(-1)
@@ -258,4 +270,4 @@ class Download:
 
 if __name__ == "__main__":
     args = arguments()
-    Download(args.URL, args.des, "=", "-").download()
+    Download(args.URL, args.des, args.o).download()
