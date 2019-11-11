@@ -158,7 +158,7 @@ class Download:
         # Till now characters present is the length of status.
         # length is the length of terminal.
         # We need to decide how long our bar will be.
-        cur_len = len(status) + 2 + 6  # 2 for bar and 6 for percent
+        cur_len = len(status) + 2 + 4  # 2 for bar and 6 for percent
 
         reduce_with_each_iter = 20
         while reduce_with_each_iter > 0:
@@ -170,7 +170,7 @@ class Download:
         if reduce_with_each_iter > 0:
             status += map_bar[reduce_with_each_iter] % ("-" * int(percent / (100 / reduce_with_each_iter)))
 
-        status += r"%3.2f%%" % (percent)
+        status += r"%-3d%%" % (int(percent))
         return status
 
     def download(self):
