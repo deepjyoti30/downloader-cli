@@ -102,15 +102,14 @@ class Download:
 
     def _format_time(self, time_left):
         """Format the passed time depending."""
+        unit_map = {0: 's', 1: 'm', 2: 'h'}
 
-        if time_left > 3600:
-            time_left = round(time_left / 3600)
-            time_unit = 'h'
-        elif time_left > 60:
-            time_left = round(time_left / 60)
-            time_unit = 'm'
+        no_iter = 0
+        while time_left > 60:
+            no_iter += 1
+            time_left /= 60
 
-        return time_left, time_unit
+        return time_left, unit_map[no_iter]
 
     def _format_speed(self, speed):
         """Format the speed."""
@@ -132,15 +131,7 @@ class Download:
 
         # Calculate time left
         time_left = round(((self.f_size - file_size_dl) / 1024) / speed)
-        time_unit = 's'
-
-        # Convert to min or hours as req
-        if time_left > 3600:
-            time_left = round(time_left / 3600)
-            time_unit = 'h'
-        elif time_left > 60:
-            time_left = round(time_left / 60)
-            time_unit = 'm'
+        time_left, time_unit = self._format_time(time_left)
 
         return speed, s_unit, time_left, time_unit
 
@@ -232,7 +223,7 @@ class Download:
                     # status = r"%s %s" % (self.basename, space * " ")
                     status = r"%-9s" % ("%s %s" % (round(f_size_disp), dw_unit))
                     status += r"| %-3s %s || " % ("%s" % (round(speed)), s_unit)
-                    status += r"ETA: %s %s " % (time_left, time_unit)
+                    status += r"ETA: %s %s " % (round(time_left), time_unit)
                     status = self._get_bar(status, length, percent)
                     status += r" %-4s" % ("{}%".format(int(percent)))
                 else:
@@ -250,11 +241,10 @@ class Download:
             print("Keyboard Interrupt passed. Exitting peacefully.")
             exit()
         except Exception as e:
-            nana
             print("ERROR: {}".format(e))
             return False
 
 
 if __name__ == "__main__":
     args = arguments()
-    Download(args.URL, args.des, "+", "-").download()
+    Download(args.URL, args.des).download()
