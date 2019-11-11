@@ -232,9 +232,9 @@ class Download:
                 if self.f_size is not None:
                     # status = r"%s %s" % (self.basename, space * " ")
                     status = r"%0.2f %s " % (f_size_disp, dw_unit)
-                    status += r"| %-5s %s | " % (float("{0:.2f}".format(speed)), s_unit)
+                    status += r"| %-5s %s || " % (float("{0:.2f}".format(speed)), s_unit)
                     status += r"ETA: %s %s " % (time_left, time_unit)
-                    status += r"%-3d%% " % (int(percent))
+                    status += r"|| %-3d%% " % (int(percent))
                     status = self._get_bar(status, length, percent)
                 else:
                     status = r"%0.2f %s" %(f_size_disp, dw_unit)
