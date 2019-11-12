@@ -36,8 +36,8 @@ class Download:
         self.des = des
         self.headers = {}
         self.f_size = 0
-        self.done_icon = icon_done
-        self.left_icon = icon_left
+        self.done_icon = icon_done if len(icon_done) < 2 else "▓"
+        self.left_icon = icon_left if len(icon_left) < 2 else "░"
         self.overwrite = overwrite
 
     def _build_headers(self, rem):
