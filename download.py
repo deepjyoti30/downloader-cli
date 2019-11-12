@@ -113,7 +113,7 @@ class Download:
         If its more than an 1 Mb then return the size in Mb's
         else return it in Kb's along with the unit.
         """
-        map_unit = {0: 'bytes', 1: "KB's", 2: "MB's", 3: "GB's"}
+        map_unit = {0: 'bytes', 1: "KB", 2: "MB", 3: "GB"}
         formatted_size = size
 
         no_iters = 0
@@ -171,7 +171,7 @@ class Download:
         # Till now characters present is the length of status.
         # length is the length of terminal.
         # We need to decide how long our bar will be.
-        cur_len = len(status) + 2 + 4  # 2 for bar and 6 for percent
+        cur_len = len(status) + 2 + 5  # 2 for bar and 5 for percent
 
         reduce_with_each_iter = 40
         while reduce_with_each_iter > 0:
@@ -244,11 +244,11 @@ class Download:
                 f_size_disp, dw_unit = self._format_size(file_size_dl)
                 if self.f_size is not None:
                     # status = r"%s %s" % (self.basename, space * " ")
-                    status = r"%-9s" % ("%s %s" % (round(f_size_disp), dw_unit))
+                    status = r"%-7s" % ("%s %s" % (round(f_size_disp), dw_unit))
                     status += r"| %-3s %s || " % ("%s" % (round(speed)), s_unit)
-                    status += r"ETA: %s %s " % (round(time_left), time_unit)
+                    status += r"ETA: %-4s " % ("%s %s" % (round(time_left), time_unit))
                     status = self._get_bar(status, length, percent)
-                    status += r" %-4s" % ("{}%".format(int(percent)))
+                    status += r" %-4s" % ("{}%".format(round(percent)))
                 else:
                     status = r"%0.2f %s" % (f_size_disp, dw_unit)
                 sys.stdout.write('\r')
