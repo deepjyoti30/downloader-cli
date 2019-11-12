@@ -150,11 +150,13 @@ class Download:
 
         # Calculate speed
         speed = (file_size_dl / 1024) / (cur_time - beg_time)
-        speed, s_unit = self._format_speed(speed)
 
         # Calculate time left
-        time_left = round(((self.f_size - file_size_dl) / 1024) / speed)
+        time_left = ((self.f_size - file_size_dl) / 1024) / speed
         time_left, time_unit = self._format_time(time_left)
+
+        # Format the speed
+        speed, s_unit = self._format_speed(speed)
 
         return speed, s_unit, time_left, time_unit
 
