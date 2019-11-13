@@ -5,12 +5,12 @@
     <img src=".github/dw.gif">
 </div>
 
-> I know the GIF says 'dw', but you need to use 'dl'
+> I know the GIF says ```dw```, but you need to use ```dl```
 
 <div align="center">
 <br/>
 
-<a href="#installation">Installation</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="#requirements">Requirements</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="#usage">Usage</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="#use-it">Use It</a>&nbsp;&nbsp;&nbsp;
+<a href="#installation">Installation</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="#permanent-installation">Permanent Installation</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="#requirements">Requirements</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="#usage">Usage</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="#use-it">Use It</a>&nbsp;&nbsp;&nbsp;
 <br/><br/>
 
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)<br/><br/>
@@ -25,6 +25,13 @@ Just clone the repo and alias the ```download.py``` to something like ```dw``` a
 ```sh
 git clone https://github.com/deepjyoti30/downloader-cli
 ```
+
+# Permanent installation
+Just run these commands while in the cloned directory.
+
+```chmod +x dl```
+
+```sudo cp dl /usr/bin/dl```
 
 # Requirements
 
@@ -58,11 +65,6 @@ optional arguments:
 
 ```
 
-# Permanent installation
-Just run these commands while in the cloned directory.
-```chmod +x dl```
-```sudo cp dl /usr/bin/dl```
-
 # Use It
 
 **Want to use it in your project?**
@@ -95,4 +97,4 @@ This is when I passed ```icon_done``` as ```#``` and ```icon_left``` as space.
     <img src=".github/dw_other.gif">
 </div>
 
-> I know the GIF says 'dw', but you need to use 'dl'
+> I know the GIF says ```dw```, but you need to use ```dl```
