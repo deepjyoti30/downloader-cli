@@ -212,10 +212,11 @@ class Download:
             self._preprocess_conn()
             WSTREAM = open(self.des, 'wb')
 
-            formatted_file_size, dw_unit = self._format_size(self.f_size)
-            print("Size: {} {}".format(round(formatted_file_size), dw_unit))
+            if self.f_size is not None:
+                formatted_file_size, dw_unit = self._format_size(self.f_size)
+                print("Size: {} {}".format(round(formatted_file_size), dw_unit))
+
             print("Saving as: {}".format(self.des))
-            self.orig_dw_unit = dw_unit
 
             file_size_dl = 0
             block_sz = 8192
