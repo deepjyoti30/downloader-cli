@@ -51,14 +51,21 @@ class Download:
         In that case there are two possibilities, it's partially downloaded
         or the file already exists.
         """
+        if self.overwrite:
+            print("Overwriting the file.")
+            return
+
         cur_size = path.getsize(self.des)
-        original_size = urllib.request.urlopen(self.URL).info()['Content-Length']
+
+        try:
+            original_size = urllib.request.urlopen(self.URL).info()['Content-Length']
+        except KeyError:
+            print("WARNING: Could not check if the file is partially downloaded.")
+            self._build_headers(cur_size)
+            return
 
         if cur_size < int(original_size):
             self._build_headers(cur_size)
-        elif self.overwrite:
-            print("Overwriting the file.")
-            return
         else:
             print("The file already exists. Quitting..!")
             exit(-1)
@@ -73,7 +80,10 @@ class Download:
             print("ERROR: {}".format(e))
             exit()
 
-        self.f_size = int(self.conn.info()['Content-Length'])
+        try:
+            self.f_size = int(self.conn.info()['Content-Length'])
+        except KeyError:
+            self.f_size = None
 
     def _get_terminal_length(self):
         """Return the length of the terminal."""
