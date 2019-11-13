@@ -4,6 +4,7 @@
 <div align="center" style="padding-top: 2em !important; padding-bottom: 2em; !important">
     <img src=".github/dw.gif">
 </div>
+> I know the GIF says 'dw', but you need to use 'dl'
 
 <div align="center">
 <br/>
@@ -43,7 +44,7 @@ pip install -r requirements.txt
 The script also allows some other values from the commandline.
 
 ```console
-usage: download.py [-h] [-o] URL [des]
+usage: dl [-h] [-o] URL [des]
 
 positional arguments:
   URL         URL of the file
@@ -55,6 +56,11 @@ optional arguments:
               download.
 
 ```
+
+# Permanent installation
+Just run these commands while in the cloned directory.
+```chmod +x dl```
+```sudo cp dl /usr/bin/dl```
 
 # Use It
 
@@ -87,3 +93,4 @@ This is when I passed ```icon_done``` as ```#``` and ```icon_left``` as space.
 <div align="center" style="padding-top: 2em !important; padding-bottom: 2em; !important">
     <img src=".github/dw_other.gif">
 </div>
+> I know the GIF says 'dw', but you need to use 'dl'
