@@ -273,7 +273,6 @@ class Download:
             print("Keyboard Interrupt passed. Exitting peacefully.")
             exit()
         except Exception as e:
-            nana
             print("ERROR: {}".format(e))
             return False
 
