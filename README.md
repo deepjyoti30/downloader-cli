@@ -20,18 +20,20 @@
 
 # Installation
 
-Just clone the repo and alias the ```download.py``` to something like ```dw``` and you're good to go.
+Just clone the repo and alias the ```dl``` executable and you're good to go.
 
 ```sh
 git clone https://github.com/deepjyoti30/downloader-cli
+cd downloader-cli
+chmod +x dl
 ```
 
 # Permanent installation
-Just run these commands while in the cloned directory.
+Follow first set of installation instuctions then this.
 
-```chmod +x dl```
-
-```sudo cp dl /usr/bin/dl```
+```sh
+sudo cp dl /usr/bin/dl
+```
 
 # Requirements
 
@@ -52,7 +54,7 @@ pip install -r requirements.txt
 The script also allows some other values from the commandline.
 
 ```console
-usage: dl [-h] [-o] URL [des]
+usage: ./dl [-h] [-o] URL [des]
 
 positional arguments:
   URL         URL of the file
@@ -64,6 +66,8 @@ optional arguments:
               download.
 
 ```
+
+> NOTE: If you have installed permanently change ```./dl``` to ```dl```
 
 # Use It
 
