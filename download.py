@@ -81,9 +81,12 @@ class Download:
             exit()
 
         try:
-            self.f_size = int(self.conn.info()['Content-Length'])
+            self.f_size = self.conn.info()['Content-Length']
         except KeyError:
             self.f_size = None
+
+        if self.f_size is not None:
+            self.f_size = int(self.f_size)
 
     def _get_terminal_length(self):
         """Return the length of the terminal."""
@@ -276,6 +279,7 @@ class Download:
             print("Keyboard Interrupt passed. Exitting peacefully.")
             exit()
         except Exception as e:
+            nana
             print("ERROR: {}".format(e))
             return False
 
