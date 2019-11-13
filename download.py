@@ -56,15 +56,12 @@ class Download:
             return
 
         cur_size = path.getsize(self.des)
+        original_size = urllib.request.urlopen(self.URL).info()['Content-Length']
 
-        try:
-            original_size = urllib.request.urlopen(self.URL).info()['Content-Length']
-        except KeyError:
+        if original_size is None:
             print("WARNING: Could not check if the file is partially downloaded.")
             self._build_headers(cur_size)
-            return
-
-        if cur_size < int(original_size):
+        elif cur_size < int(original_size):
             self._build_headers(cur_size)
         else:
             print("The file already exists. Quitting..!")
@@ -80,10 +77,7 @@ class Download:
             print("ERROR: {}".format(e))
             exit()
 
-        try:
-            self.f_size = self.conn.info()['Content-Length']
-        except KeyError:
-            self.f_size = None
+        self.f_size = self.conn.info()['Content-Length']
 
         if self.f_size is not None:
             self.f_size = int(self.f_size)
