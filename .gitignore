@@ -1,0 +1,3 @@
+build/*
+dist/*
+downloader_cli.egg-info/*
