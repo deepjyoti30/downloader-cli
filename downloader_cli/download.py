@@ -4,6 +4,7 @@ import time
 from os import path
 from os import popen
 import argparse
+import itertools
 
 # import traceback ## Required to debug at times.
 
@@ -39,6 +40,7 @@ class Download:
         self.done_icon = icon_done if len(icon_done) < 2 else "▓"
         self.left_icon = icon_left if len(icon_left) < 2 else "░"
         self.overwrite = overwrite
+        self._cycle_bar = None
 
     def _build_headers(self, rem):
         """Build headers according to requirement."""
@@ -167,7 +169,13 @@ class Download:
 
         return speed, s_unit, time_left, time_unit
 
-    def _get_bar(self, status, length, percent):
+    def _get_pos(self, reduce_with_each_iter):
+        if self._cycle_bar is None:
+            self._cycle_bar = itertools.cycle(range(0, int(reduce_with_each_iter / 2)))
+
+        return (next(self._cycle_bar) + 1)
+
+    def _get_bar(self, status, length, percent=None):
         """Calculate the progressbar depending on the length of terminal."""
 
         map_bar = {
@@ -180,7 +188,10 @@ class Download:
         # Till now characters present is the length of status.
         # length is the length of terminal.
         # We need to decide how long our bar will be.
-        cur_len = len(status) + 2 + 5  # 2 for bar and 5 for percent
+        cur_len = len(status) + 2  # 2 for bar
+
+        if percent is not None:
+            cur_len += 5  # 5 for percent
 
         reduce_with_each_iter = 40
         while reduce_with_each_iter > 0:
@@ -198,8 +209,15 @@ class Download:
             status += "\033[1m"
             # Add color.
             status += "\033[1;34m"
-            done = int(percent / (100 / reduce_with_each_iter))
-            status += r"|%s%s|" % (self.done_icon * done, self.left_icon * (reduce_with_each_iter - done))
+            if percent is not None:
+                done = int(percent / (100 / reduce_with_each_iter))
+                status += r"|%s%s|" % (self.done_icon * done, self.left_icon * (reduce_with_each_iter - done))
+            else:
+                current_pos = self._get_pos(reduce_with_each_iter)
+                bar = " " * (current_pos - 1) if current_pos > 1 else ""
+                bar += self.done_icon * 1
+                bar += " " * int((reduce_with_each_iter) - current_pos)
+                status += r"|%s|" % (bar)
 
         status += "\033[0m"
         return status
@@ -261,6 +279,7 @@ class Download:
                     status += r" %-4s" % ("{}%".format(round(percent)))
                 else:
                     status = r"%0.2f %s" % (f_size_disp, dw_unit)
+                    status = self._get_bar(status, length)
                 sys.stdout.write('\r')
                 sys.stdout.write(status)
                 sys.stdout.flush()
@@ -280,7 +299,7 @@ class Download:
 
 def main():
     args = arguments()
-    Download(args.URL, args.des, args.o).download()
+    Download(args.URL, args.des, args.o, "#").download()
 
 
 if __name__ == "__main__":
