@@ -43,7 +43,7 @@ sudo python setup.py install
 The script also allows some other values from the commandline.
 
 ```console
-usage: download.py [-h] [-o] URL [des]
+usage: dw [-h] [-o] URL [des]
 
 positional arguments:
   URL         URL of the file
@@ -66,7 +66,6 @@ Import the ```Download``` class using the following.
 from downloader_cli.download import Download
 Download(url).download()
 ```
-
 
 Above is the simplest way to use it in your app. The other arguments are optional.
 
