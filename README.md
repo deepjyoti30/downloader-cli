@@ -81,10 +81,19 @@ The module takes 5 arguments.
 | icon_done| No   | ▓       |
 | icon_left| No   | ░       |
 
-### In case you want to experiment with the progress bar's icons, here's an example.
+> **NOTE** In case the file size is not available, the bar is shown as indefinite, in which case the icon_left
+by default space(```" "```).
 
-This is when I passed ```icon_done``` as ```#``` and ```icon_left``` as space.
+### In case you want to experiment with the progress bar's icons, here's some examples.
 
-<div align="center" style="padding-top: 2em !important; padding-bottom: 2em; !important">
-    <img src=".github/dw_other.gif">
-</div>
+- This is when I passed ```icon_done``` as ```#``` and ```icon_left``` as space.
+
+  <div align="center" style="padding-top: 2em !important; padding-bottom: 2em; !important">
+      <img src=".github/dw_other.gif">
+  </div>
+
+- In case a file's size is not available from the server, the progressbar is indefinite.
+
+  <div align="center">
+      <img src=".github/indefinite_bar.gif">
+  </div>
