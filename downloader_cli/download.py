@@ -299,7 +299,7 @@ class Download:
 
 def main():
     args = arguments()
-    Download(args.URL, args.des, args.o, "#").download()
+    Download(args.URL, args.des, args.o).download()
 
 
 if __name__ == "__main__":
