@@ -18,25 +18,25 @@
 
 # Installation
 
-Just clone the repo and alias the ```download.py``` to something like ```dw``` and you're good to go.
+The package is available in PyPi [here](https://pypi.org/project/downloader-cli/)
+
+Install it using
 
 ```sh
-git clone https://github.com/deepjyoti30/downloader-cli
+pip install downloader-cli
+```
+
+If you want to manuall install, clone the repo and run the following command
+
+```sh
+sudo python setup.py install
 ```
 
 # Requirements
 
-Make sure that you have the following python modules installed.
+**downloader-cli** requires just one external module.
 
 - [urllib3](https://pypi.org/project/urllib3/)
-
-> Use the ```requirements.txt``` file to install them.
-
-```sh
-pip install -r requirements.txt
-```
-
-> Run the command with ```sudo``` if you get permission denied.
 
 # Usage
 
@@ -60,12 +60,14 @@ optional arguments:
 
 **Want to use it in your project?**
 
-Just include the file in your project directory and import it. It's simple to use it.
+Import the ```Download``` class using the following.
 
 ```python
-from download import Download
+from downloader_cli.download import Download
 Download(url).download()
 ```
+
+
 Above is the simplest way to use it in your app. The other arguments are optional.
 
 ## Arguments
