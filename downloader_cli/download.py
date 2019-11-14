@@ -161,8 +161,11 @@ class Download:
         speed = (file_size_dl / 1024) / (cur_time - beg_time)
 
         # Calculate time left
-        time_left = ((self.f_size - file_size_dl) / 1024) / speed
-        time_left, time_unit = self._format_time(time_left)
+        if self.f_size is not None:
+            time_left = ((self.f_size - file_size_dl) / 1024) / speed
+            time_left, time_unit = self._format_time(time_left)
+        else:
+            time_left, time_unit = "", ""
 
         # Format the speed
         speed, s_unit = self._format_speed(speed)
@@ -171,7 +174,7 @@ class Download:
 
     def _get_pos(self, reduce_with_each_iter):
         if self._cycle_bar is None:
-            self._cycle_bar = itertools.cycle(range(0, int(reduce_with_each_iter / 2)))
+            self._cycle_bar = itertools.cycle(range(0, int(reduce_with_each_iter)))
 
         return (next(self._cycle_bar) + 1)
 
@@ -255,12 +258,13 @@ class Download:
                 time_unit = ''
                 percent = ''
 
+                speed, s_unit, time_left, time_unit = self._get_speed_n_time(
+                                                file_size_dl,
+                                                beg_time,
+                                                cur_time=time.time()
+                                            )
+
                 if self.f_size is not None:
-                    speed, s_unit, time_left, time_unit = self._get_speed_n_time(
-                                                    file_size_dl,
-                                                    beg_time,
-                                                    cur_time=time.time()
-                                                )
                     percent = file_size_dl * 100 / self.f_size
 
                 # Get basename
@@ -270,16 +274,17 @@ class Download:
                 length = self._get_terminal_length()
 
                 f_size_disp, dw_unit = self._format_size(file_size_dl)
+
+                status = r"%-7s" % ("%s %s" % (round(f_size_disp), dw_unit))
+                status += r"| %-3s %s " % ("%s" % (round(speed)), s_unit)
+
                 if self.f_size is not None:
-                    # status = r"%s %s" % (self.basename, space * " ")
-                    status = r"%-7s" % ("%s %s" % (round(f_size_disp), dw_unit))
-                    status += r"| %-3s %s || " % ("%s" % (round(speed)), s_unit)
-                    status += r"ETA: %-4s " % ("%s %s" % (round(time_left), time_unit))
+                    status += r"|| ETA: %-4s " % ("%s %s" % (round(time_left), time_unit))
                     status = self._get_bar(status, length, percent)
                     status += r" %-4s" % ("{}%".format(round(percent)))
                 else:
-                    status = r"%0.2f %s" % (f_size_disp, dw_unit)
                     status = self._get_bar(status, length)
+
                 sys.stdout.write('\r')
                 sys.stdout.write(status)
                 sys.stdout.flush()
