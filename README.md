@@ -75,15 +75,20 @@ Above is the simplest way to use it in your app. The other arguments are optiona
 
 ## Arguments
 
-The module takes 5 arguments.
+The module takes 8 arguments. Only **one** is required though.
 
 | Name | required | default |
 |------|----------|---------|
 | URL  | Yes      |         |
 | des  | No       | None (Current directory is selected and the name is extracted from the URL)|
 | overwrite| No   | False   |
+| continue_download| No | False |
+| echo | No | False |
+| quiet | No | False | 
 | icon_done| No   | ▓       |
 | icon_left| No   | ░       |
+
+> **NOTE** For details regarding the arguments, check [Usage](#usage)
 
 > **NOTE** In case the file size is not available, the bar is shown as indefinite, in which case the icon_left
 by default space(```" "```).
