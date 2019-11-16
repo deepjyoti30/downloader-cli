@@ -12,7 +12,7 @@
 <br/><br/>
 
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)<br/><br/>
-[![License](https://img.shields.io/badge/License-MIT-pink.svg?style=for-the-badge)](LICENSE) ![PyPI](https://img.shields.io/pypi/v/downloader-cli?style=for-the-badge) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-purple.svg?style=for-the-badge)](http://makeapullrequest.com)
+[![License](https://img.shields.io/badge/License-MIT-pink.svg?style=for-the-badge)](LICENSE) ![PyPI](https://img.shields.io/pypi/v/downloader-cli?style=for-the-badge) ![AUR](https://img.shields.io/aur/version/downloader-cli?style=for-the-badge) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-purple.svg?style=for-the-badge)](http://makeapullrequest.com)
 
 </div>
 
@@ -31,6 +31,8 @@ If you want to manuall install, clone the repo and run the following command
 ```sh
 sudo python setup.py install
 ```
+
+**The packages available in PyPi and AUR contain the last release, if you want all the latest changes, clone the repo and install manually or wait for the next release.**
 
 # Requirements
 
