@@ -43,16 +43,20 @@ sudo python setup.py install
 The script also allows some other values from the commandline.
 
 ```console
-usage: dw [-h] [-o] URL [des]
+usage: dw [-h] [-f | -c] [-e] [-q] SOURCE [TARGET]
 
 positional arguments:
-  URL         URL of the file
-  des         The name of the file to be saved with.
+  SOURCE           URL of the file
+  TARGET           target filepath (existing directories will be treated as
+                   the target location)
 
 optional arguments:
-  -h, --help  show this help message and exit
-  -o          Overwrite if the file already exists else, try to resume
-              download.
+  -h, --help       show this help message and exit
+  -f, -o, --force  overwrite if the file already exists
+  -c, --resume     resume failed or cancelled download (partial sanity check)
+  -e, --echo       print the filepath to stdout after downloading (other
+                   output will be redirected to stderr)
+  -q, --quiet      suppress filesize and progress info
 
 ```
 
