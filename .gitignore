@@ -2,3 +2,4 @@ build/*
 dist/*
 downloader_cli.egg-info/*
 downloader_cli/__pycache__/*
+test.py

@@ -46,8 +46,8 @@ class Download:
         echo=False,
         quiet=False,
         icon_done="▓",
-        icon_left="░"
-
+        icon_left="░",
+        icon_border="|"
     ):
         self.URL = URL
         self.des = des
@@ -55,6 +55,7 @@ class Download:
         self.f_size = 0
         self.done_icon = icon_done if len(icon_done) < 2 else "▓"
         self.left_icon = icon_left if len(icon_left) < 2 else "░"
+        self.border_left, self.border_right = self._extract_border_icon(icon_border)
         self._cycle_bar = None
         self.echo = echo
         self.quiet = quiet
@@ -62,6 +63,25 @@ class Download:
         self.continue_download = continue_download
         self.file_exists = False
         self.ostream = sys.stderr if self.echo else sys.stdout
+
+    def _extract_border_icon(self, passed_icon):
+        """"
+        Extract the passed border icon according to
+        what is passed.
+
+        If the string has length equal to 2, then use the
+        first char as left border icon and the second as
+        right.
+
+        If the string has length equal to 1, use the same icon for both.
+        """
+        if len(passed_icon) == 1:
+            return passed_icon, passed_icon
+
+        if len(passed_icon) == 2:
+            return passed_icon[0], passed_icon[1]
+
+        return "|", "|"
 
     def _build_headers(self, rem):
         """Build headers according to requirement."""
@@ -238,14 +258,17 @@ class Download:
             status += "\033[1;34m"
             if percent is not None:
                 done = int(percent / (100 / reduce_with_each_iter))
-                status += r"|%s%s|" % (self.done_icon * done,
-                                       self.left_icon * (reduce_with_each_iter - done))
+                status += r"%s%s%s%s" % (
+                                    self.border_left,
+                                    self.done_icon * done,
+                                    self.left_icon * (reduce_with_each_iter - done),
+                                    self.border_right)
             else:
                 current_pos = self._get_pos(reduce_with_each_iter)
                 bar = " " * (current_pos - 1) if current_pos > 1 else ""
                 bar += self.done_icon * 1
                 bar += " " * int((reduce_with_each_iter) - current_pos)
-                status += r"|%s|" % (bar)
+                status += r"%s%s%s" % (self.border_left, bar, self.border_right)
 
         status += "\033[0m"
         return status
