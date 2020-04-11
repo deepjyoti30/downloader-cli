@@ -89,6 +89,7 @@ The module takes 8 arguments. Only **one** is required though.
 | quiet | No | False | 
 | icon_done| No   | ▓       |
 | icon_left| No   | ░       |
+| icon_border| No | \| (If a single char is passed, it will be used for both the right and left border. If a string of 2 chars are passed, 1st char will be used as left border and the 2nd as the right border) |
 
 > **NOTE** For details regarding the arguments, check [Usage](#usage)
 
