@@ -45,10 +45,11 @@ sudo python setup.py install
 The script also allows some other values from the commandline.
 
 ```console
-usage: dw [-h] [-f | -c] [-e] [-q] SOURCE [TARGET]
+usage: dw [-h] [-f | -c] [-e] [-q] [-v] SOURCE [TARGET]
 
 positional arguments:
-  SOURCE           URL of the file
+  SOURCE           URL of the file. Alternately a file containing URL's with
+                   each URL in a new line can be passed.
   TARGET           target filepath (existing directories will be treated as
                    the target location)
 
@@ -59,6 +60,7 @@ optional arguments:
   -e, --echo       print the filepath to stdout after downloading (other
                    output will be redirected to stderr)
   -q, --quiet      suppress filesize and progress info
+  -v, --version    Show the current version
 
 ```
 
@@ -77,11 +79,11 @@ Above is the simplest way to use it in your app. The other arguments are optiona
 
 ## Arguments
 
-The module takes 8 arguments. Only **one** is required though.
+The module takes various arguments. Only **one** is required though.
 
 | Name | required | default |
 |------|----------|---------|
-| URL  | Yes      |         |
+| URL/file  | Yes      |         |
 | des  | No       | None (Current directory is selected and the name is extracted from the URL)|
 | overwrite| No   | False   |
 | continue_download| No | False |

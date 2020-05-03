@@ -7,6 +7,7 @@ from os import path
 from os import popen
 import argparse
 import itertools
+from re import match
 
 # import traceback ## Required to debug at times.
 
@@ -15,7 +16,8 @@ def arguments():
     """Parse the arguments."""
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('URL', help="URL of the file",
+    parser.add_argument('URL', help="URL of the file. Alternately a file containing URL's \
+        with each URL in a new line can be passed.",
                         type=str, metavar="SOURCE")
     parser.add_argument('des', help="target filepath (existing directories \
                         will be treated as the target location)", default=None, nargs="?",
@@ -30,6 +32,9 @@ def arguments():
                         to stderr)", action="store_true")
     parser.add_argument(
         '-q', '--quiet', help="suppress filesize and progress info", action="store_true")
+    parser.add_argument(
+        '-v', '--version', help="Show the current version", action='version',
+        version='0.2.0')
 
     args = parser.parse_args()
     return args
@@ -144,6 +149,29 @@ class Download:
         if path.exists(self.des):
             self._parse_exists()
             self.file_exists = True
+
+    def _parse_URL(self):
+        """
+        The URL can be a file as well so in that case we
+        will download each URL from that file.
+
+        In case the URL is not a file and just a simple URL,
+        download just that one.
+
+        returns: A list of urls
+        """
+        if match(r"^https?://*", self.URL):
+            return [self.URL]
+
+        rel_path = path.expanduser(self.URL)
+        # Put a check to see if the file is present
+        if not path.exists(rel_path) or not path.isfile(rel_path):
+            print("{}: not a valid name or is a directory".format(rel_path))
+            exit(-1)
+
+        # If it's not an URL, read the contents.
+        with open(rel_path, "r") as RSTREAM:
+            return RSTREAM.read().split("\n")
 
     def _get_name(self):
         """Try to get the name of the file from the URL."""
@@ -273,7 +301,7 @@ class Download:
         status += "\033[0m"
         return status
 
-    def download(self):
+    def _download(self):
         try:
             self._parse_destination()
 
@@ -354,10 +382,21 @@ class Download:
         except KeyboardInterrupt:
             self.ostream.flush()
             print("Keyboard Interrupt passed. Exiting peacefully.")
-            exit()
+            exit(0)
         except Exception as e:
             print("ERROR: {}".format(e))
             return False
+
+    def download(self):
+        """
+        download will iterate through a list of possible url's
+        and destinations and keep passing to the actual download
+        method _download().
+        """
+        urls = self._parse_URL()
+        for url in urls:
+            self.URL = url
+            self._download()
 
 
 def main():

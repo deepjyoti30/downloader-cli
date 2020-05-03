@@ -13,7 +13,7 @@ requirements = [
 
 setup(
     name="downloader_cli",
-    version="0.1.0-2",
+    version="0.2.0",
     author="Deepjyoti Barman",
     author_email="deep.barman30@gmail.com",
     description="A simple downloader written in Python with an awesome progressbar.",
