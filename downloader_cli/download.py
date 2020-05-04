@@ -56,6 +56,7 @@ class Download:
     ):
         self.URL = URL
         self.des = des
+        self.passed_dir = None
         self.headers = {}
         self.f_size = 0
         self.done_icon = icon_done if len(icon_done) < 2 else "▓"
@@ -140,6 +141,7 @@ class Download:
         # Check if the des is passed
         if self.des is not None:
             if path.isdir(self.des):
+                self.passed_dir = self.des
                 self.des = path.join(self.des, self._get_name())
         else:
             self.des = self._get_name()
@@ -397,6 +399,7 @@ class Download:
         for url in urls:
             self.URL = url
             self._download()
+            self.des = self.passed_dir
 
 
 def main():
