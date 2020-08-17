@@ -1,5 +1,6 @@
 name = "downloader_cli"
 
 __all__ = [
-            "download"
+            "download",
+            "__version__"
         ]

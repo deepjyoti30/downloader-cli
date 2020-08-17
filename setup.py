@@ -11,9 +11,12 @@ requirements = [
     'urllib3>=1.25.6'
 ]
 
+exec(open("downloader_cli/__version__.py").read())
+
+
 setup(
     name="downloader_cli",
-    version="0.2.0",
+    version=__version__,
     author="Deepjyoti Barman",
     author_email="deep.barman30@gmail.com",
     description="A simple downloader written in Python with an awesome progressbar.",

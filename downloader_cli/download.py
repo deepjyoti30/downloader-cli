@@ -9,6 +9,8 @@ import argparse
 import itertools
 from re import match
 
+from downloader_cli.__version__ import __version__
+
 # import traceback ## Required to debug at times.
 
 
@@ -32,9 +34,8 @@ def arguments():
                         to stderr)", action="store_true")
     parser.add_argument(
         '-q', '--quiet', help="suppress filesize and progress info", action="store_true")
-    parser.add_argument(
-        '-v', '--version', help="Show the current version", action='version',
-        version='0.2.0')
+    parser.add_argument('-v', '--version', action='version', version=__version__,
+                        help='show the program version number and exit')
 
     args = parser.parse_args()
     return args
