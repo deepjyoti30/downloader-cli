@@ -12,7 +12,7 @@
 <br/><br/>
 
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)<br/><br/>
-[![License](https://img.shields.io/badge/License-MIT-pink.svg?style=for-the-badge)](LICENSE) ![PyPI](https://img.shields.io/pypi/v/downloader-cli?style=for-the-badge) ![AUR](https://img.shields.io/aur/version/downloader-cli?style=for-the-badge) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-purple.svg?style=for-the-badge)](http://makeapullrequest.com)
+[![License](https://img.shields.io/badge/License-MIT-pink.svg?style=for-the-badge)](LICENSE) [![Downloads](https://img.shields.io/badge/dynamic/json?style=for-the-badge&maxAge=86400&label=downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi.pepy.tech%2Fapi%2Fprojects%2Fdownloader-cli)](https://img.shields.io/badge/dynamic/json?style=for-the-badge&maxAge=86400&label=downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi.pepy.tech%2Fapi%2Fprojects%2Fdownloader-cli) ![PyPI](https://img.shields.io/pypi/v/downloader-cli?style=for-the-badge) ![AUR](https://img.shields.io/aur/version/downloader-cli?style=for-the-badge) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-purple.svg?style=for-the-badge)](http://makeapullrequest.com)
 
 </div>
 
