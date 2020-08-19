@@ -26,6 +26,22 @@ Install it using
 pip install downloader-cli
 ```
 
+The package is also available in src_prepare Gentoo overlay [here](https://gitlab.com/src_prepare/src_prepare-overlay/-/tree/master/net-misc/downloader-cli/)
+
+First set up src_prepare-overlay
+
+```sh
+sudo emerge -anv --noreplace app-eselect/eselect-repository
+sudo eselect repository enable src_prepare-overlay
+sudo emaint sync -r src_prepare-overlay
+```
+
+Install it using
+
+```sh
+sudo emerge -anv --autounmask net-misc/downloader-cli
+```
+
 If you want to manuall install, clone the repo and run the following command
 
 ```sh
