@@ -18,13 +18,34 @@
 
 # Installation
 
-The package is available in PyPi [here](https://pypi.org/project/downloader-cli/)
+- [PyPI](#pypi)
+- [Arch](#arch)
+- [Gentoo](#gentoo)
+- [Manual](#manual)
+
+>NOTE: The following packages (except installing manually) will get you the latest release. If you want to try out the latest development stuff, install manually.
+
+### PyPI
+
+The package is available in PyPI [here](https://pypi.org/project/downloader-cli/)
 
 Install it using
 
 ```sh
 pip install downloader-cli
 ```
+
+### Arch
+
+The package is available in the AUR [here](https://aur.archlinux.org/packages/downloader-cli/)
+
+Install it using `yay`
+
+```console
+yay -S downloader-cli
+```
+
+### Gentoo
 
 The package is also available in src_prepare Gentoo overlay [here](https://gitlab.com/src_prepare/src_prepare-overlay/-/tree/master/net-misc/downloader-cli/)
 
@@ -42,13 +63,13 @@ Install it using
 sudo emerge -anv --autounmask net-misc/downloader-cli
 ```
 
+### Manual
+
 If you want to manuall install, clone the repo and run the following command
 
 ```sh
 sudo python setup.py install
 ```
-
-**The packages available in PyPi and AUR contain the last release, if you want all the latest changes, clone the repo and install manually or wait for the next release.**
 
 # Requirements
 
