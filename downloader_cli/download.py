@@ -165,16 +165,23 @@ class Download:
         """
         if match(r"^https?://*", self.URL):
             return [self.URL]
-
+       
         rel_path = path.expanduser(self.URL)
+        if rel_path.startswith('file://'):
+            # the URL begins with a file protocol
+            rel_path = rel_path[len('file://'):]
+
+        # get the realpath of the URL
+        # follows linux `realpath`
+        rel_path = path.realpath(rel_path)
+
         # Put a check to see if the file is present
         if not path.exists(rel_path) or not path.isfile(rel_path):
             print("{}: not a valid name or is a directory".format(rel_path))
             exit(-1)
 
-        # If it's not an URL, read the contents.
-        with open(rel_path, "r") as RSTREAM:
-            return RSTREAM.read().split("\n")
+        # If it's not an URL, provide the file:// protocol URL.
+        return ['file://{url}'.format(url=rel_path)]
 
     def _get_name(self):
         """Try to get the name of the file from the URL."""
