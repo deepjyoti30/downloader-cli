@@ -18,15 +18,14 @@ def arguments():
     """Parse the arguments."""
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('URL', help="URL of the file. Alternately a file containing URL's \
-        with each URL in a new line can be passed.",
+    parser.add_argument('URL', help="URL of the file",
                         type=str, metavar="SOURCE")
     parser.add_argument('des', help="target filepath (existing directories \
                         will be treated as the target location)", default=None, nargs="?",
                         metavar='TARGET')
     force = parser.add_mutually_exclusive_group()
     force.add_argument('-f', '-o', '--force', help="overwrite if the file already exists",
-                        action="store_true")
+                       action="store_true")
     force.add_argument('-c', '--resume', help='resume failed or cancelled \
                         download (partial sanity check)', action="store_true")
     parser.add_argument('-e', '--echo', help="print the filepath to stdout after \
@@ -34,7 +33,14 @@ def arguments():
                         to stderr)", action="store_true")
     parser.add_argument(
         '-q', '--quiet', help="suppress filesize and progress info", action="store_true")
-    parser.add_argument('-v', '--version', action='version', version=__version__,
+    parser.add_argument(
+        '-b', '--batch', help="Download files in batch. If this flag is passed \
+        the passed source will be considered as a file with download links \
+        seperated by a newline. This flag will be ignored if source is a valid \
+        URL.", default=False, action="store_true"
+    )
+    parser.add_argument('-v', '--version', action='version',
+                        version=__version__,
                         help='show the program version number and exit')
 
     args = parser.parse_args()
@@ -51,6 +57,7 @@ class Download:
         continue_download=False,
         echo=False,
         quiet=False,
+        batch=False,
         icon_done="▓",
         icon_left="░",
         icon_border="|"
@@ -66,6 +73,7 @@ class Download:
         self._cycle_bar = None
         self.echo = echo
         self.quiet = quiet
+        self.batch = batch
         self.overwrite = overwrite
         self.continue_download = continue_download
         self.file_exists = False
@@ -175,6 +183,14 @@ class Download:
         """
         if match(r"^https?://*|^file://*", self.URL):
             return [self.URL]
+
+        # Below code will only be executed if the -b
+        # flag is passed
+        if not self.batch:
+            print("{}: not a valid URL. Pass -b if it is a file "
+                  "containing various URL's and you want bulk download."
+                  .format(self.URL))
+            exit(0)
 
         rel_path = path.expanduser(self.URL)
 
@@ -421,7 +437,7 @@ def main():
     args = arguments()
     _out = Download(URL=args.URL, des=args.des, overwrite=args.force,
                     continue_download=args.resume, echo=args.echo,
-                    quiet=args.quiet)
+                    quiet=args.quiet, batch=args.batch)
     success = _out.download()
     if success and args.echo:
         print(_out.des)
