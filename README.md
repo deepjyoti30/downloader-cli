@@ -82,11 +82,10 @@ sudo python setup.py install
 The script also allows some other values from the commandline.
 
 ```console
-usage: dw [-h] [-f | -c] [-e] [-q] [-v] SOURCE [TARGET]
+usage: dw [-h] [-f | -c] [-e] [-q] [-b] [-v] SOURCE [TARGET]
 
 positional arguments:
-  SOURCE           URL of the file. Alternately a file containing URL's with
-                   each URL in a new line can be passed.
+  SOURCE           URL of the file
   TARGET           target filepath (existing directories will be treated as
                    the target location)
 
@@ -97,7 +96,11 @@ optional arguments:
   -e, --echo       print the filepath to stdout after downloading (other
                    output will be redirected to stderr)
   -q, --quiet      suppress filesize and progress info
-  -v, --version    Show the current version
+  -b, --batch      Download files in batch. If this flag is passed the passed
+                   source will be considered as a file with download links
+                   seperated by a newline. This flag will be ignored if source
+                   is a valid URL.
+  -v, --version    show the program version number and exit
 
 ```
 
@@ -125,7 +128,8 @@ The module takes various arguments. Only **one** is required though.
 | overwrite| No   | False   |
 | continue_download| No | False |
 | echo | No | False |
-| quiet | No | False | 
+| quiet | No | False |
+| batch | No | False |
 | icon_done| No   | ▓       |
 | icon_left| No   | ░       |
 | icon_border| No | \| (If a single char is passed, it will be used for both the right and left border. If a string of 2 chars are passed, 1st char will be used as left border and the 2nd as the right border) |
