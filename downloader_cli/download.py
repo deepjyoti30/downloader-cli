@@ -153,6 +153,37 @@ class Download:
             self._parse_exists()
             self.file_exists = True
 
+    def _is_valid_src_path(self, file_path):
+        """Check to see if the path passed is
+        a valid source path.
+
+        A valid source path would be a file that
+        is not a directory and actually a file
+        present in the disk.
+        """
+        return not path.exists(file_path) or not path.isfile(file_path)
+
+    def _parse_file_URL(self):
+        """Check to see if the passed URL is a file
+        that is using the file:// protocol.
+
+        If it is, extract the proper path and make
+        sure it is valid.
+        """
+        # the URL begins with a file protocol
+        rel_path = self.URL[len('file://'):]
+
+        # get the realpath of the URL
+        # follows linux `realpath`
+        rel_path = path.expanduser(rel_path)
+        rel_path = path.realpath(rel_path)
+
+        if self._is_valid_src_path(rel_path):
+            print("{}: not a valid name or is a directory".format(rel_path))
+            exit(-1)
+
+        return rel_path
+
     def _parse_URL(self):
         """
         The URL can be a file as well so in that case we
@@ -166,13 +197,20 @@ class Download:
         if match(r"^https?://*", self.URL):
             return [self.URL]
 
+        if match(r'^file://*', self.URL):
+            return [self._parse_file_URL()]
+
         rel_path = path.expanduser(self.URL)
+
         # Put a check to see if the file is present
-        if not path.exists(rel_path) or not path.isfile(rel_path):
+        if self._is_valid_src_path(rel_path):
             print("{}: not a valid name or is a directory".format(rel_path))
             exit(-1)
 
         # If it's not an URL, read the contents.
+        # Since the URL is not an actual URL, we're assuming
+        # it is a file that contains URL's seperated by new
+        # lines.
         with open(rel_path, "r") as RSTREAM:
             return RSTREAM.read().split("\n")
 
