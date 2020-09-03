@@ -163,27 +163,6 @@ class Download:
         """
         return not path.exists(file_path) or not path.isfile(file_path)
 
-    def _parse_file_URL(self):
-        """Check to see if the passed URL is a file
-        that is using the file:// protocol.
-
-        If it is, extract the proper path and make
-        sure it is valid.
-        """
-        # the URL begins with a file protocol
-        rel_path = self.URL[len('file://'):]
-
-        # get the realpath of the URL
-        # follows linux `realpath`
-        rel_path = path.expanduser(rel_path)
-        rel_path = path.realpath(rel_path)
-
-        if self._is_valid_src_path(rel_path):
-            print("{}: not a valid name or is a directory".format(rel_path))
-            exit(-1)
-
-        return rel_path
-
     def _parse_URL(self):
         """
         The URL can be a file as well so in that case we
@@ -194,11 +173,8 @@ class Download:
 
         returns: A list of urls
         """
-        if match(r"^https?://*", self.URL):
+        if match(r"^https?://*|^file://*", self.URL):
             return [self.URL]
-
-        if match(r'^file://*', self.URL):
-            return [self._parse_file_URL()]
 
         rel_path = path.expanduser(self.URL)
 
