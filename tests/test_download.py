@@ -29,3 +29,22 @@ def test__extract_border_icon():
     assert icon_two == ('[', ']'), "Should be ('[', '])"
     assert icon_none == ('|', '|'), "Should be ('|', '|')"
     assert icon_more == ('|', '|'), "Should be ('|', '|')"
+
+
+def test__build_headers():
+    """Test the _build_headers method"""
+    download = Download(TEST_URL)
+
+    download._build_headers(1024)
+    header_built = download.headers
+
+    assert header_built == {"Range": "bytes={}-".format(1024)}, \
+        "Should be 1024"
+
+
+def test__preprocess_conn():
+    """Test the _preprocess_conn method"""
+    download = Download(TEST_URL)
+    download._preprocess_conn()
+
+    assert download.f_size == 5242880, "Should be 5242880"
