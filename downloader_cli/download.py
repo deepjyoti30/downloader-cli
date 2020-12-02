@@ -3,8 +3,7 @@
 import urllib.request
 import sys
 import time
-from os import path
-from os import popen
+from os import path, get_terminal_size
 import argparse
 import itertools
 from re import match
@@ -143,8 +142,8 @@ class Download:
 
     def _get_terminal_length(self):
         """Return the length of the terminal."""
-        rows, cols = popen('stty size', 'r').read().split()
-        return int(cols)
+        cols = get_terminal_size().columns
+        return cols
 
     def _parse_destination(self):
         # Check if the des is passed
