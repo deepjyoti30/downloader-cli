@@ -3,7 +3,7 @@
 import urllib.request
 import sys
 import time
-from os import path, get_terminal_size
+from os import path, get_terminal_size, name
 import argparse
 import itertools
 from re import match
@@ -143,7 +143,7 @@ class Download:
     def _get_terminal_length(self):
         """Return the length of the terminal."""
         cols = get_terminal_size().columns
-        return cols
+        return cols if name != "nt" else cols - 1
 
     def _parse_destination(self):
         # Check if the des is passed
