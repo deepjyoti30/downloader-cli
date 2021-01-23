@@ -373,11 +373,16 @@ class Download:
                 time_unit = ''
                 percent = ''
 
-                speed, s_unit, time_left, time_unit = self._get_speed_n_time(
+                try:
+                    speed, s_unit, time_left, time_unit = self._get_speed_n_time(
                     file_size_dl,
                     beg_time,
                     cur_time=time.time()
-                )
+                    )
+                except ZeroDivisionError:
+                    speed = 0
+                    s_unit = 'b/s'
+                    time_left = 'INF'
 
                 if self.f_size is not None:
                     percent = file_size_dl * 100 / self.f_size
