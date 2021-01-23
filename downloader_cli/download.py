@@ -260,6 +260,12 @@ class Download:
     def _get_speed_n_time(self, file_size_dl, beg_time, cur_time):
         """Return the speed and time depending on the passed arguments."""
 
+        # Sometimes the beg_time and the cur_time are same, so we need
+        # to make sure that doesn't raise a ZeroDivisionError in the
+        # following line.
+        if cur_time == beg_time:
+            return "Inf", "", 0, ""
+
         # Calculate speed
         speed = (file_size_dl / 1024) / (cur_time - beg_time)
 
@@ -273,7 +279,7 @@ class Download:
         # Format the speed
         speed, s_unit = self._format_speed(speed)
 
-        return speed, s_unit, time_left, time_unit
+        return round(speed), s_unit, round(time_left), time_unit
 
     def _get_pos(self, reduce_with_each_iter):
         if self._cycle_bar is None:
@@ -391,11 +397,11 @@ class Download:
                 f_size_disp, dw_unit = self._format_size(file_size_dl)
 
                 status = r"%-7s" % ("%s %s" % (round(f_size_disp), dw_unit))
-                status += r"| %-3s %s " % ("%s" % (round(speed)), s_unit)
+                status += r"| %-3s %s " % ("%s" % (speed), s_unit)
 
                 if self.f_size is not None:
                     status += r"|| ETA: %-4s " % ("%s %s" %
-                                                  (round(time_left), time_unit))
+                                                  (time_left, time_unit))
                     status = self._get_bar(status, length, percent)
                     status += r" %-4s" % ("{}%".format(round(percent)))
                 else:
