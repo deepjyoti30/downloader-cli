@@ -211,11 +211,11 @@ class Download:
         name = 'temp'
         temp_url = self.URL
 
-        split_url = temp_url.split('/')
+        split_url = temp_url.split('/')[-1]
 
-        for name in split_url[::-1]:
-            if name != '':
-                break
+        if split_url:
+            # Remove query params if any
+            name = split_url.split("?")[0]
 
         return name
 
