@@ -345,7 +345,7 @@ class Download:
 
             # Download files with a progressbar showing the percentage
             self._preprocess_conn()
-            WSTREAM = open(self.des, 'wb')
+            WSTREAM = open(self.des, 'ab')
 
             if self.f_size is not None and self.quiet is False:
                 formatted_file_size, dw_unit = self._format_size(self.f_size)
