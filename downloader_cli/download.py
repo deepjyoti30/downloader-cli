@@ -391,23 +391,22 @@ class Download:
                 # Get basename
                 self.basename = path.basename(self.des)
 
-                # Calculate amount of space req in between
-                length = self._get_terminal_length()
-
-                f_size_disp, dw_unit = self._format_size(file_size_dl)
-
-                status = r"%-7s" % ("%s %s" % (round(f_size_disp), dw_unit))
-                status += r"| %-3s %s " % ("%s" % (speed), s_unit)
-
-                if self.f_size is not None:
-                    status += r"|| ETA: %-4s " % ("%s %s" %
-                                                  (time_left, time_unit))
-                    status = self._get_bar(status, length, percent)
-                    status += r" %-4s" % ("{}%".format(round(percent)))
-                else:
-                    status = self._get_bar(status, length)
-
                 if not self.quiet:
+                    # Calculate amount of space req in between
+                    length = self._get_terminal_length()
+
+                    f_size_disp, dw_unit = self._format_size(file_size_dl)
+
+                    status = r"%-7s" % ("%s %s" % (round(f_size_disp), dw_unit))
+                    status += r"| %-3s %s " % ("%s" % (speed), s_unit)
+
+                    if self.f_size is not None:
+                        status += r"|| ETA: %-4s " % ("%s %s" %
+                                                    (time_left, time_unit))
+                        status = self._get_bar(status, length, percent)
+                        status += r" %-4s" % ("{}%".format(round(percent)))
+                    else:
+                        status = self._get_bar(status, length)
                     self.ostream.write('\r')
                     self.ostream.write(status)
                     self.ostream.flush()
