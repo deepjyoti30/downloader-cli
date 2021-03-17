@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import traceback
 import urllib.request
 import sys
 import time
@@ -422,7 +422,8 @@ class Download:
             print("Keyboard Interrupt passed. Exiting peacefully.")
             exit(0)
         except Exception as e:
-            print("ERROR: {}".format(e.with_traceback))
+            print("ERROR: {}".format(e))
+            traceback.print_tb(e.__traceback__)
             return False
 
     def download(self):
