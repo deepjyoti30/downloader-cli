@@ -422,7 +422,7 @@ class Download:
             print("Keyboard Interrupt passed. Exiting peacefully.")
             exit(0)
         except Exception as e:
-            print("ERROR: {}".format(e))
+            print("ERROR: {}".format(e.with_traceback))
             return False
 
     def download(self):
