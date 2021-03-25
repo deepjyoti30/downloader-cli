@@ -1,0 +1,29 @@
+name: Run tests
+
+on:
+  push:
+    branches:
+      - "test-cd"
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+      - uses: actions/checkout@v2
+      - name: Set Up Python 3.x
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+      - name: Install package
+        run: python setup.py Install
+      - name: Install pytest
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+      - name: Run tests
+        run: pytest tests/test*
