@@ -10,6 +10,9 @@ If the method to be tested is extract_content,
 the test method name will be test_extract_content
 """
 
+from hashlib import md5
+from os import remove
+
 from downloader_cli.download import Download
 
 
@@ -84,3 +87,24 @@ def test__format_time():
     # Time should be 4 minutes
     assert int(time) == 4, "Should be 4"
     assert unit == "m", "Should be m"
+
+
+def test_file_integrity():
+    """
+    Test the integrity of the downloaded file.
+
+    We will test the 5MB.zip file which has a hash
+    of `eb08885e3082037a12a42308c521fa3c`.
+    """
+    HASH = "eb08885e3082037a12a42308c521fa3c"
+
+    download = Download(TEST_URL)
+    download.download()
+
+    # Once download is done, check the integrity
+    _hash = md5(open("5MB.zip", "rb").read()).hexdigest()
+
+    assert _hash == HASH, "Integrity check failed for 5MB.zip"
+
+    # Remove the file now
+    remove(download.basename)
