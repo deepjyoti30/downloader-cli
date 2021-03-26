@@ -48,3 +48,19 @@ def test__preprocess_conn():
     download._preprocess_conn()
 
     assert download.f_size == 5242880, "Should be 5242880"
+
+
+def test__format_size():
+    """
+    Test the function that formats the size
+    """
+    download = Download(TEST_URL)
+
+    size, unit = download._format_size(255678999)
+
+    # Size should be 243.83449459075928
+    # and unit should be `MB`
+    size = int(size)
+
+    assert size == 243, "Should be 243"
+    assert unit == "MB", "Should be MB"
