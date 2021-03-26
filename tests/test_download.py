@@ -64,3 +64,23 @@ def test__format_size():
 
     assert size == 243, "Should be 243"
     assert unit == "MB", "Should be MB"
+
+
+def test__format_time():
+    """
+    Test the format time function that formats the
+    passed time into a readable value
+    """
+    download = Download(TEST_URL)
+
+    time, unit = download._format_time(2134991)
+
+    # Time should be 9 days
+    assert int(time) == 9, "Should be 9"
+    assert unit == "d", "Should be d"
+
+    time, unit = download._format_time(245)
+
+    # Time should be 4 minutes
+    assert int(time) == 4, "Should be 4"
+    assert unit == "m", "Should be m"
