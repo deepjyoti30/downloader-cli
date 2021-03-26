@@ -237,7 +237,7 @@ class Download:
 
     def _format_time(self, time_left):
         """Format the passed time depending."""
-        unit_map = {0: 's', 1: 'm', 2: 'h'}
+        unit_map = {0: 's', 1: 'm', 2: 'h', 3: 'd'}
 
         no_iter = 0
         while time_left > 60:
