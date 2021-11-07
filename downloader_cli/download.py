@@ -68,7 +68,8 @@ class Download:
         self.f_size = 0
         self.done_icon = icon_done if len(icon_done) < 2 else "▓"
         self.left_icon = icon_left if len(icon_left) < 2 else "░"
-        self.border_left, self.border_right = self._extract_border_icon(icon_border)
+        self.border_left, self.border_right = self._extract_border_icon(
+            icon_border)
         self._cycle_bar = None
         self.echo = echo
         self.quiet = quiet
@@ -100,7 +101,8 @@ class Download:
     def _build_headers(self, rem):
         """Build headers according to requirement."""
         self.headers = {"Range": "bytes={}-".format(rem)}
-        print("Trying to resume download at: {} bytes".format(rem), file=self.ostream)
+        print("Trying to resume download at: {} bytes".format(
+            rem), file=self.ostream)
 
     def _parse_exists(self):
         """This function should be called if the file already exists.
@@ -117,12 +119,13 @@ class Download:
 
             if original_size is None:
                 print("WARNING: Could not perform sanity check on partial download.",
-                    file=self.ostream)
+                      file=self.ostream)
                 self._build_headers(cur_size)
             elif cur_size < int(original_size):
                 self._build_headers(cur_size)
         else:
-            print("ERROR: File exists. See 'dw --help' for solutions.", file=self.ostream)
+            print("ERROR: File exists. See 'dw --help' for solutions.",
+                  file=self.ostream)
             exit(-1)
 
     def _preprocess_conn(self):
@@ -142,6 +145,10 @@ class Download:
 
     def _get_terminal_length(self):
         """Return the length of the terminal."""
+        # If quiet is passed, skip this calculation and return a default length
+        if self.quiet:
+            return 50
+
         cols = get_terminal_size().columns
         return cols if name != "nt" else cols - 1
 
@@ -325,16 +332,17 @@ class Download:
             if percent is not None:
                 done = int(percent / (100 / reduce_with_each_iter))
                 status += r"%s%s%s%s" % (
-                                    self.border_left,
-                                    self.done_icon * done,
-                                    self.left_icon * (reduce_with_each_iter - done),
-                                    self.border_right)
+                    self.border_left,
+                    self.done_icon * done,
+                    self.left_icon * (reduce_with_each_iter - done),
+                    self.border_right)
             else:
                 current_pos = self._get_pos(reduce_with_each_iter)
                 bar = " " * (current_pos - 1) if current_pos > 1 else ""
                 bar += self.done_icon * 1
                 bar += " " * int((reduce_with_each_iter) - current_pos)
-                status += r"%s%s%s" % (self.border_left, bar, self.border_right)
+                status += r"%s%s%s" % (self.border_left,
+                                       bar, self.border_right)
 
         status += "\033[0m"
         return status
@@ -349,7 +357,8 @@ class Download:
 
             if self.f_size is not None and self.quiet is False:
                 formatted_file_size, dw_unit = self._format_size(self.f_size)
-                print("Size: {} {}".format(round(formatted_file_size), dw_unit), file=self.ostream)
+                print("Size: {} {}".format(
+                    round(formatted_file_size), dw_unit), file=self.ostream)
 
             _owrite = ("Overwriting: {}" if (self.file_exists and
                                              self.overwrite) else "Saving as: {}").format(self.des)
