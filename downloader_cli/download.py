@@ -281,7 +281,7 @@ class Download:
             time_left = ((self.f_size - file_size_dl) / 1024) / speed
             time_left, time_unit = self._format_time(time_left)
         else:
-            time_left, time_unit = "", ""
+            time_left, time_unit = 0, ""
 
         # Format the speed
         speed, s_unit = self._format_speed(speed)
