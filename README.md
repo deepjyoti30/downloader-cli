@@ -21,6 +21,7 @@
 - [PyPI](#pypi)
 - [Arch](#arch)
 - [Gentoo](#gentoo)
+- [Conda-Forge](#conda-forge)
 - [Manual](#manual)
 
 >NOTE: The following packages (except installing manually) will get you the latest release. If you want to try out the latest development stuff, install manually.
@@ -62,6 +63,28 @@ Install it using
 ```sh
 sudo emerge -anv --autounmask net-misc/downloader-cli
 ```
+
+### Conda-Forge
+
+Installing `downloader-cli` from the `conda-forge` channel can be achieved by adding `conda-forge` to your channels with:
+
+```
+conda config --add channels conda-forge
+conda config --set channel_priority strict
+```
+
+Once the `conda-forge` channel has been enabled, `downloader-cli` can be installed with:
+
+```
+conda install downloader-cli
+```
+
+It is possible to list all of the versions of `downloader-cli` available on your platform with:
+
+```
+conda search downloader-cli --channel conda-forge
+```
+
 
 ### Manual
 
