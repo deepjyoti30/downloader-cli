@@ -26,14 +26,14 @@ class ShellColor:
         return color.startswith("\e[")
 
     def __get_reset_color(self) -> str:
-        return "\e[0m"
+        return "\033[0m"
 
     @property
     def reset(self) -> str:
         return self.__get_reset_color()
     
     def __build_color_str(self, color_number: int) -> str:
-        return f"\e[1;{color_number}m" if color_number != 0 else self.reset
+        return f"\033[1;{color_number}m" if color_number != 0 else self.reset
     
     def is_valid_color(self, color: str) -> bool:
         """
@@ -57,7 +57,7 @@ class ShellColor:
             return to_wrap
         
         if not self.__is_raw_color(color):
-            color_number = self.__get_color_map(color)
+            color_number = self.__get_color_map().get(color, 0)
             if not bool(color_number):
                 raise ValueError('invalid value passed for `color`. Please use `is_valid_color()` to validate the color before using.')
             
