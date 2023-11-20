@@ -33,7 +33,7 @@ setup(
     ),
     entry_points={
         'console_scripts': [
-            "dw = downloader_cli.download:main"
+            "dw = downloader_cli.main:main"
         ]
     },
     install_requires=requirements,
