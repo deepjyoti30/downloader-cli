@@ -49,7 +49,13 @@ class ShellColor:
         """
         Wrap the passed string in the provided color and accordingly
         set reset if `skip_reset` is not `False`
+        
+        If an empty string is passed for the `color` value, then the `to_wrap` string will
+        be returned as is, without any modifications.
         """
+        if color == "":
+            return to_wrap
+        
         if not self.__is_raw_color(color):
             color_number = self.__get_color_map(color)
             if not bool(color_number):

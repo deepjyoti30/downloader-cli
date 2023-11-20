@@ -327,7 +327,7 @@ class Download:
         
         This will wrap the icon in any colors if they are provided
         """
-        return self.__done_color + self.__done_icon
+        return self.color_engine.wrap_in_color(self.__done_color) + self.__done_icon
 
     @property
     def left_icon(self) -> str:
@@ -336,7 +336,7 @@ class Download:
         
         This will wrap the icon in any colors if they are provided
         """
-        return self.__left_color + self.__left_icon
+        return self.color_engine.wrap_in_color(self.__left_color) + self.__left_icon
 
     def _get_bar(self, status, length, percent=None):
         """Calculate the progressbar depending on the length of terminal."""
