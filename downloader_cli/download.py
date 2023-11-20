@@ -59,7 +59,9 @@ class Download:
         batch=False,
         icon_done="▓",
         icon_left="░",
-        icon_border="|"
+        icon_border="|",
+        color_done="",
+        color_left=""
     ):
         self.URL = URL
         self.des = des
