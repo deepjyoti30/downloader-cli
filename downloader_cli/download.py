@@ -4,47 +4,12 @@ import urllib.request
 import sys
 import time
 from os import path, get_terminal_size, name
-import argparse
 import itertools
 from re import match
 
-from downloader_cli.__version__ import __version__
+from downloader_cli.color import ShellColor
 
 # import traceback ## Required to debug at times.
-
-
-def arguments():
-    """Parse the arguments."""
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument('URL', help="URL of the file",
-                        type=str, metavar="SOURCE")
-    parser.add_argument('des', help="target filepath (existing directories \
-                        will be treated as the target location)", default=None, nargs="?",
-                        metavar='TARGET')
-    force = parser.add_mutually_exclusive_group()
-    force.add_argument('-f', '-o', '--force', help="overwrite if the file already exists",
-                       action="store_true")
-    force.add_argument('-c', '--resume', help='resume failed or cancelled \
-                        download (partial sanity check)', action="store_true")
-    parser.add_argument('-e', '--echo', help="print the filepath to stdout after \
-                        downloading (other output will be redirected \
-                        to stderr)", action="store_true")
-    parser.add_argument(
-        '-q', '--quiet', help="suppress filesize and progress info", action="store_true")
-    parser.add_argument(
-        '-b', '--batch', help="Download files in batch. If this flag is passed \
-        the passed source will be considered as a file with download links \
-        seperated by a newline. This flag will be ignored if source is a valid \
-        URL.", default=False, action="store_true"
-    )
-    parser.add_argument('-v', '--version', action='version',
-                        version=__version__,
-                        help='show the program version number and exit')
-
-    args = parser.parse_args()
-    return args
-
 
 class Download:
 
@@ -59,15 +24,22 @@ class Download:
         batch=False,
         icon_done="▓",
         icon_left="░",
-        icon_border="|"
+        icon_border="|",
+        color_done="",
+        color_left=""
     ):
+        # Initialize necessary engines
+        self.__init_color_engine()
+        
         self.URL = URL
         self.des = des
         self.passed_dir = None
         self.headers = {}
         self.f_size = 0
-        self.done_icon = icon_done if len(icon_done) < 2 else "▓"
-        self.left_icon = icon_left if len(icon_left) < 2 else "░"
+        self.__done_icon = icon_done if icon_done is not None and len(icon_done) < 2 else "▓"
+        self.__left_icon = icon_left if icon_left is not None and len(icon_left) < 2 else "░"
+        self.__done_color = color_done
+        self.__left_color = color_left
         self.border_left, self.border_right = self._extract_border_icon(
             icon_border)
         self._cycle_bar = None
@@ -78,6 +50,23 @@ class Download:
         self.continue_download = continue_download
         self.file_exists = False
         self.ostream = sys.stderr if self.echo else sys.stdout
+        
+        # Validate the colors
+        if self.__done_color != "" and not self.color_engine.is_valid_color(self.__done_color):
+            raise ValueError('invalid value passed for `color_done`')
+        
+        if self.__left_color != "" and not self.color_engine.is_valid_color(self.__left_color):
+            raise ValueError('invalid value passed for `color_left`')
+    
+    def __init_color_engine(self):
+        """
+        Initialize the color engine class
+        """
+        self.__color_engine = ShellColor()
+    
+    @property
+    def color_engine(self) -> ShellColor:
+        return self.__color_engine
 
     def _extract_border_icon(self, passed_icon):
         """"
@@ -294,6 +283,24 @@ class Download:
                 range(0, int(reduce_with_each_iter)))
 
         return (next(self._cycle_bar) + 1)
+    
+    @property
+    def done_icon(self) -> str:
+        """
+        Return the done icon.
+        
+        This will wrap the icon in any colors if they are provided
+        """
+        return self.color_engine.wrap_in_color(self.__done_icon, self.__done_color)
+
+    @property
+    def left_icon(self) -> str:
+        """
+        Return the left icon.
+        
+        This will wrap the icon in any colors if they are provided
+        """
+        return self.color_engine.wrap_in_color(self.__left_icon, self.__left_color)
 
     def _get_bar(self, status, length, percent=None):
         """Calculate the progressbar depending on the length of terminal."""
@@ -446,17 +453,3 @@ class Download:
             self._download()
             self.des = self.passed_dir
 
-
-def main():
-    args = arguments()
-    _out = Download(URL=args.URL, des=args.des, overwrite=args.force,
-                    continue_download=args.resume, echo=args.echo,
-                    quiet=args.quiet, batch=args.batch)
-    success = _out.download()
-    if success and args.echo:
-        print(_out.des)
-    sys.stderr.close
-
-
-if __name__ == "__main__":
-    main()
