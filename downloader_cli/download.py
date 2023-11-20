@@ -86,6 +86,13 @@ class Download:
         self.continue_download = continue_download
         self.file_exists = False
         self.ostream = sys.stderr if self.echo else sys.stdout
+        
+        # Validate the colors
+        if self.__done_color != "" and not self.color_engine.is_valid_color(self.__done_color):
+            raise ValueError('invalid value passed for `color_done`')
+        
+        if self.__left_color != "" and not self.color_engine.is_valid_color(self.__left_color):
+            raise ValueError('invalid value passed for `color_left`')
     
     def __init_color_engine(self):
         """
