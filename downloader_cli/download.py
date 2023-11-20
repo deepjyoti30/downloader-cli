@@ -9,6 +9,7 @@ import itertools
 from re import match
 
 from downloader_cli.__version__ import __version__
+from downloader_cli.util.color import ShellColor
 
 # import traceback ## Required to debug at times.
 
@@ -63,6 +64,9 @@ class Download:
         color_done="",
         color_left=""
     ):
+        # Initialize necessary engines
+        self.__init_color_engine()
+        
         self.URL = URL
         self.des = des
         self.passed_dir = None
@@ -82,6 +86,16 @@ class Download:
         self.continue_download = continue_download
         self.file_exists = False
         self.ostream = sys.stderr if self.echo else sys.stdout
+    
+    def __init_color_engine(self):
+        """
+        Initialize the color engine class
+        """
+        self.__color_engine = ShellColor()
+    
+    @property
+    def color_engine(self) -> ShellColor:
+        return self.__color_engine
 
     def _extract_border_icon(self, passed_icon):
         """"
