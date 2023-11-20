@@ -68,8 +68,10 @@ class Download:
         self.passed_dir = None
         self.headers = {}
         self.f_size = 0
-        self.done_icon = icon_done if len(icon_done) < 2 else "▓"
-        self.left_icon = icon_left if len(icon_left) < 2 else "░"
+        self.__done_icon = icon_done if len(icon_done) < 2 else "▓"
+        self.__left_icon = icon_left if len(icon_left) < 2 else "░"
+        self.__done_color = color_done
+        self.__left_color = color_left
         self.border_left, self.border_right = self._extract_border_icon(
             icon_border)
         self._cycle_bar = None
@@ -296,6 +298,24 @@ class Download:
                 range(0, int(reduce_with_each_iter)))
 
         return (next(self._cycle_bar) + 1)
+    
+    @property
+    def done_icon(self) -> str:
+        """
+        Return the done icon.
+        
+        This will wrap the icon in any colors if they are provided
+        """
+        return self.__done_color + self.__done_icon
+
+    @property
+    def left_icon(self) -> str:
+        """
+        Return the left icon.
+        
+        This will wrap the icon in any colors if they are provided
+        """
+        return self.__left_color + self.__left_icon
 
     def _get_bar(self, status, length, percent=None):
         """Calculate the progressbar depending on the length of terminal."""
