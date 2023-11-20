@@ -46,6 +46,9 @@ def arguments():
     ui_group.add_argument(
         "--color-left", help="Color for the remaining percentage icon", type=str, default=""
     )
+    ui_group.add_argument(
+        "--icon-border", help="Icon for the border of the progress bar", type=str, default="|"
+    )
 
     args = parser.parse_args()
     return args
@@ -57,7 +60,7 @@ def main():
                     continue_download=args.resume, echo=args.echo,
                     quiet=args.quiet, batch=args.batch, icon_done=args.done,
                     icon_left=args.left, color_done=args.color_done,
-                    color_left=args.color_left)
+                    color_left=args.color_left, icon_border=args.icon_border)
     success = _out.download()
     if success and args.echo:
         print(_out.des)
