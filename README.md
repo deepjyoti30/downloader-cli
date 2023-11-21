@@ -174,7 +174,11 @@ The module takes various arguments. Only **one** is required though.
 | batch | No | False |
 | icon_done| No   | ▓       |
 | icon_left| No   | ░       |
+| icon_current | No | ▓     |
 | icon_border| No | \| (If a single char is passed, it will be used for both the right and left border. If a string of 2 chars are passed, 1st char will be used as left border and the 2nd as the right border) |
+| color_done | No | blue |
+| color_left | No | blue |
+| color_current | No | blue |
 
 > **NOTE** For details regarding the arguments, check [Usage](#usage)
 
