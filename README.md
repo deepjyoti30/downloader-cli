@@ -24,7 +24,7 @@
 - [Conda-Forge](#conda-forge)
 - [Manual](#manual)
 
->NOTE: The following packages (except installing manually) will get you the latest release. If you want to try out the latest development stuff, install manually.
+> NOTE: The following packages (except installing manually) will get you the latest release. If you want to try out the latest development stuff, install manually.
 
 ### PyPI
 
@@ -85,7 +85,6 @@ It is possible to list all of the versions of `downloader-cli` available on your
 conda search downloader-cli --channel conda-forge
 ```
 
-
 ### Manual
 
 If you want to manuall install, clone the repo and run the following command
@@ -105,25 +104,45 @@ sudo python setup.py install
 The script also allows some other values from the commandline.
 
 ```console
-usage: dw [-h] [-f | -c] [-e] [-q] [-b] [-v] SOURCE [TARGET]
+usage: dw [-h] [-f | -c] [-e] [-q] [-b] [-v] [--done DONE] [--left LEFT]
+          [--current CURRENT] [--color-done COLOR_DONE]
+          [--color-left COLOR_LEFT] [--color-current COLOR_CURRENT]
+          [--icon-border ICON_BORDER]
+          SOURCE [TARGET]
 
 positional arguments:
-  SOURCE           URL of the file
-  TARGET           target filepath (existing directories will be treated as
-                   the target location)
+  SOURCE                URL of the file
+  TARGET                target filepath (existing directories will be treated
+                        as the target location)
 
 optional arguments:
-  -h, --help       show this help message and exit
-  -f, -o, --force  overwrite if the file already exists
-  -c, --resume     resume failed or cancelled download (partial sanity check)
-  -e, --echo       print the filepath to stdout after downloading (other
-                   output will be redirected to stderr)
-  -q, --quiet      suppress filesize and progress info
-  -b, --batch      Download files in batch. If this flag is passed the passed
-                   source will be considered as a file with download links
-                   seperated by a newline. This flag will be ignored if source
-                   is a valid URL.
-  -v, --version    show the program version number and exit
+  -h, --help            show this help message and exit
+  -f, -o, --force       overwrite if the file already exists
+  -c, --resume          resume failed or cancelled download (partial sanity
+                        check)
+  -e, --echo            print the filepath to stdout after downloading (other
+                        output will be redirected to stderr)
+  -q, --quiet           suppress filesize and progress info
+  -b, --batch           Download files in batch. If this flag is passed the
+                        passed source will be considered as a file with
+                        download links seperated by a newline. This flag will
+                        be ignored if source is a valid URL.
+  -v, --version         show the program version number and exit
+
+UI Group:
+  --done DONE           Icon indicating the percentage done of the downloader
+  --left LEFT           Icon indicating the percentage remaining to download
+  --current CURRENT     Icon indicating the current percentage in the progress
+                        bar
+  --color-done COLOR_DONE
+                        Color for the done percentage icon
+  --color-left COLOR_LEFT
+                        Color for the remaining percentage icon
+  --color-current COLOR_CURRENT
+                        Color for the current indicator icon in the progress
+                        bar
+  --icon-border ICON_BORDER
+                        Icon for the border of the progress bar
 
 ```
 
@@ -131,7 +150,7 @@ optional arguments:
 
 **Want to use it in your project?**
 
-Import the ```Download``` class using the following.
+Import the `Download` class using the following.
 
 ```python
 from downloader_cli.download import Download
@@ -160,13 +179,13 @@ The module takes various arguments. Only **one** is required though.
 > **NOTE** For details regarding the arguments, check [Usage](#usage)
 
 > **NOTE** In case the file size is not available, the bar is shown as indefinite, in which case the icon_left
-by default space(```" "```).
+> by default space(`" "`).
 
 # Other examples
 
 ### In case you want to experiment with the progress bar's icons, here's some examples.
 
-- This is when I passed ```icon_done``` as ```#``` and ```icon_left``` as space.
+- This is when I passed `icon_done` as `#` and `icon_left` as space.
 
   <div align="center" style="padding-top: 2em !important; padding-bottom: 2em; !important">
       <img src=".github/dw_other.gif">
