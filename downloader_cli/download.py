@@ -313,11 +313,16 @@ class Download:
         """
         return self.color_engine.wrap_in_color(self.__left_icon, self.__left_color)
 
-    def get_done_with_current(self, done_percent: int) -> str:
+    def get_done_with_current(self, done_percent: int, remaining_percent: int = None) -> str:
         if done_percent == 0:
             return ""
 
-        return self.done_icon * (done_percent - 1) + self.current_icon
+        if remaining_percent == 0:
+            # Download is completed so no need to show the current icon
+            # anymore
+            return self.done_icon * done_percent
+
+        return self.done_icon * (done_percent - len(self.current_icon)) + self.current_icon
 
     def _get_bar(self, status, length, percent=None):
         """Calculate the progressbar depending on the length of terminal."""
@@ -357,7 +362,8 @@ class Download:
                 done = int(percent / (100 / reduce_with_each_iter))
                 status += r"%s%s%s%s" % (
                     self.border_left,
-                    self.get_done_with_current(done),
+                    self.get_done_with_current(
+                        done, reduce_with_each_iter - done),
                     self.left_icon * (reduce_with_each_iter - done),
                     self.border_right)
             else:
