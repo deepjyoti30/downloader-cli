@@ -64,4 +64,8 @@ class ShellColor:
 
             color = self.__build_color_str(color_number)
 
-        return f"{color}{to_wrap}{self.reset}"
+        reset_to_add = self.reset
+        if skip_reset:
+            reset_to_add = ""
+
+        return f"{color}{to_wrap}{reset_to_add}"

@@ -28,3 +28,5 @@ class TestShellColor:
 
         assert shell_color.wrap_in_color(
             "test", "green") == "\033[1;32mtest\033[0m"
+        assert shell_color.wrap_in_color(
+            "test", "green", True) == "\033[1;32mtest"
