@@ -11,6 +11,7 @@ from downloader_cli.color import ShellColor
 
 # import traceback ## Required to debug at times.
 
+
 class Download:
 
     def __init__(
@@ -24,22 +25,27 @@ class Download:
         batch=False,
         icon_done="▓",
         icon_left="░",
+        icon_current="",
         icon_border="|",
         color_done="",
         color_left=""
     ):
         # Initialize necessary engines
         self.__init_color_engine()
-        
+
         self.URL = URL
         self.des = des
         self.passed_dir = None
         self.headers = {}
         self.f_size = 0
-        self.__done_icon = icon_done if icon_done is not None and len(icon_done) < 2 else "▓"
-        self.__left_icon = icon_left if icon_left is not None and len(icon_left) < 2 else "░"
+        self.__done_icon = icon_done if icon_done is not None and len(
+            icon_done) < 2 else "▓"
+        self.__left_icon = icon_left if icon_left is not None and len(
+            icon_left) < 2 else "░"
         self.__done_color = color_done
         self.__left_color = color_left
+        self.__current_icon = icon_current if icon_current is not None and len(
+            icon_current) < 2 else "▓"
         self.border_left, self.border_right = self._extract_border_icon(
             icon_border)
         self._cycle_bar = None
@@ -50,20 +56,20 @@ class Download:
         self.continue_download = continue_download
         self.file_exists = False
         self.ostream = sys.stderr if self.echo else sys.stdout
-        
+
         # Validate the colors
         if self.__done_color != "" and not self.color_engine.is_valid_color(self.__done_color):
             raise ValueError('invalid value passed for `color_done`')
-        
+
         if self.__left_color != "" and not self.color_engine.is_valid_color(self.__left_color):
             raise ValueError('invalid value passed for `color_left`')
-    
+
     def __init_color_engine(self):
         """
         Initialize the color engine class
         """
         self.__color_engine = ShellColor()
-    
+
     @property
     def color_engine(self) -> ShellColor:
         return self.__color_engine
@@ -283,24 +289,36 @@ class Download:
                 range(0, int(reduce_with_each_iter)))
 
         return (next(self._cycle_bar) + 1)
-    
+
     @property
     def done_icon(self) -> str:
         """
         Return the done icon.
-        
+
         This will wrap the icon in any colors if they are provided
         """
         return self.color_engine.wrap_in_color(self.__done_icon, self.__done_color)
 
     @property
+    def current_icon(self) -> str:
+        # TODO: Wrap in current icon color
+        return self.__current_icon
+
+    @property
     def left_icon(self) -> str:
         """
         Return the left icon.
-        
+
         This will wrap the icon in any colors if they are provided
         """
         return self.color_engine.wrap_in_color(self.__left_icon, self.__left_color)
+
+    @property
+    def done_with_current(self) -> str:
+        """
+        Build the done icon with the current icon added to the end.
+        """
+        return self.done_icon + self.current_icon
 
     def _get_bar(self, status, length, percent=None):
         """Calculate the progressbar depending on the length of terminal."""
@@ -340,13 +358,13 @@ class Download:
                 done = int(percent / (100 / reduce_with_each_iter))
                 status += r"%s%s%s%s" % (
                     self.border_left,
-                    self.done_icon * done,
+                    self.done_with_current * done,
                     self.left_icon * (reduce_with_each_iter - done),
                     self.border_right)
             else:
                 current_pos = self._get_pos(reduce_with_each_iter)
                 bar = " " * (current_pos - 1) if current_pos > 1 else ""
-                bar += self.done_icon * 1
+                bar += self.current_icon * 1
                 bar += " " * int((reduce_with_each_iter) - current_pos)
                 status += r"%s%s%s" % (self.border_left,
                                        bar, self.border_right)
@@ -452,4 +470,3 @@ class Download:
             self.URL = url
             self._download()
             self.des = self.passed_dir
-

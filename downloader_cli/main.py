@@ -4,6 +4,7 @@ import sys
 from downloader_cli.__version__ import __version__
 from downloader_cli.download import Download
 
+
 def arguments():
     """Parse the arguments."""
     parser = argparse.ArgumentParser()
@@ -32,13 +33,16 @@ def arguments():
     parser.add_argument('-v', '--version', action='version',
                         version=__version__,
                         help='show the program version number and exit')
-    
+
     ui_group = parser.add_argument_group("UI Group")
     ui_group.add_argument(
         "--done", help="Icon indicating the percentage done of the downloader", type=str, default=None
     )
     ui_group.add_argument(
         "--left", help="Icon indicating the percentage remaining to download", type=str, default=None
+    )
+    ui_group.add_argument(
+        "--current", help="Icon indicating the current percentage in the progress bar", type=str, default=None
     )
     ui_group.add_argument(
         "--color-done", help="Color for the done percentage icon", type=str, default=""
@@ -60,7 +64,8 @@ def main():
                     continue_download=args.resume, echo=args.echo,
                     quiet=args.quiet, batch=args.batch, icon_done=args.done,
                     icon_left=args.left, color_done=args.color_done,
-                    color_left=args.color_left, icon_border=args.icon_border)
+                    color_left=args.color_left, icon_border=args.icon_border,
+                    icon_current=args.current)
     success = _out.download()
     if success and args.echo:
         print(_out.des)
