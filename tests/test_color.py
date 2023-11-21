@@ -3,6 +3,8 @@ Handle testing the color related functionality from the
 ShellColor class
 """
 
+import pytest
+
 from downloader_cli.color import ShellColor
 
 
@@ -32,3 +34,7 @@ class TestShellColor:
             "test", "\033[1;31m") == "\033[1;31mtest\033[0m"
         assert shell_color.wrap_in_color(
             "test", "green", True) == "\033[1;32mtest"
+
+        with pytest.raises(ValueError):
+            assert shell_color.wrap_in_color(
+                "test", "test_color") == "\033[1;32mtest"
