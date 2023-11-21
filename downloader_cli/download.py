@@ -28,7 +28,8 @@ class Download:
         icon_current="",
         icon_border="|",
         color_done="",
-        color_left=""
+        color_left="",
+        color_current=""
     ):
         # Initialize necessary engines
         self.__init_color_engine()
@@ -44,6 +45,7 @@ class Download:
             icon_left) < 2 else "░"
         self.__done_color = color_done
         self.__left_color = color_left
+        self.__current_color = color_current
         self.__current_icon = icon_current if icon_current is not None and len(
             icon_current) < 2 else "▓"
         self.border_left, self.border_right = self._extract_border_icon(
@@ -58,11 +60,13 @@ class Download:
         self.ostream = sys.stderr if self.echo else sys.stdout
 
         # Validate the colors
-        if self.__done_color != "" and not self.color_engine.is_valid_color(self.__done_color):
-            raise ValueError('invalid value passed for `color_done`')
+        self.__validate_passed_color(self.__done_color, 'color_done')
+        self.__validate_passed_color(self.__left_color, 'color_left')
+        self.__validate_passed_color(self.__current_color, 'color_current')
 
-        if self.__left_color != "" and not self.color_engine.is_valid_color(self.__left_color):
-            raise ValueError('invalid value passed for `color_left`')
+    def __validate_passed_color(self, color, name):
+        if color != "" and not self.color_engine.is_valid_color(color):
+            raise ValueError(f'invalid value passed for `{name}`')
 
     def __init_color_engine(self):
         """
@@ -301,8 +305,12 @@ class Download:
 
     @property
     def current_icon(self) -> str:
-        # TODO: Wrap in current icon color
-        return self.__current_icon
+        """
+        Return the current icon.
+
+        This will wrap the icon in any colors if they are provided.
+        """
+        return self.color_engine.wrap_in_color(self.__current_icon, self.__current_color)
 
     @property
     def left_icon(self) -> str:
@@ -322,7 +330,7 @@ class Download:
             # anymore
             return self.done_icon * done_percent
 
-        return self.done_icon * (done_percent - len(self.current_icon)) + self.current_icon
+        return self.done_icon * (done_percent - len(self.__current_icon)) + self.current_icon
 
     def _get_bar(self, status, length, percent=None):
         """Calculate the progressbar depending on the length of terminal."""
