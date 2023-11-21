@@ -313,12 +313,11 @@ class Download:
         """
         return self.color_engine.wrap_in_color(self.__left_icon, self.__left_color)
 
-    @property
-    def done_with_current(self) -> str:
-        """
-        Build the done icon with the current icon added to the end.
-        """
-        return self.done_icon + self.current_icon
+    def get_done_with_current(self, done_percent: int) -> str:
+        if done_percent == 0:
+            return ""
+
+        return self.done_icon * (done_percent - 1) + self.current_icon
 
     def _get_bar(self, status, length, percent=None):
         """Calculate the progressbar depending on the length of terminal."""
@@ -358,7 +357,7 @@ class Download:
                 done = int(percent / (100 / reduce_with_each_iter))
                 status += r"%s%s%s%s" % (
                     self.border_left,
-                    self.done_with_current * done,
+                    self.get_done_with_current(done),
                     self.left_icon * (reduce_with_each_iter - done),
                     self.border_right)
             else:
