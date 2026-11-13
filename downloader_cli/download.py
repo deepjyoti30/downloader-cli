@@ -122,6 +122,9 @@ class Download:
                 self._build_headers(cur_size)
             elif cur_size < int(original_size):
                 self._build_headers(cur_size)
+            else:
+                print("File is already fully downloaded.", file=self.ostream)
+                exit(0)
         else:
             print("ERROR: File exists. See 'dw --help' for solutions.",
                   file=self.ostream)
