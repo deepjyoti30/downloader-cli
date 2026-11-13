@@ -23,7 +23,7 @@ class ShellColor:
         }
 
     def __is_raw_color(self, color: str) -> bool:
-        return color.startswith("\e[") or color.startswith("\033[")
+        return color.startswith(r"\e[") or color.startswith("\033[")
 
     def __get_reset_color(self) -> str:
         return "\033[0m"

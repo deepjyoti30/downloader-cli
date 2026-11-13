@@ -19,8 +19,8 @@ class TestShellColor:
         assert shell_color.is_valid_color("test") == False
         assert shell_color.is_valid_color("reset") == False
         assert shell_color.is_valid_color("\033[0;32m") == True
-        assert shell_color.is_valid_color("\e[0;32m") == True
-        assert shell_color.is_valid_color("\e_test") == False
+        assert shell_color.is_valid_color(r"\e[0;32m") == True
+        assert shell_color.is_valid_color(r"\e_test") == False
 
     def test_wrap_in_color(self):
         """
