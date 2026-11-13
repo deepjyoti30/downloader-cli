@@ -1,29 +1,83 @@
-name: PyPI Release
+name: Publish to PyPI
 
 on:
+  # A release is created by pushing a version tag, such as 0.4.1 or v0.4.1.
   push:
     tags:
       - "*"
 
+# Build artifacts are untrusted until the dedicated publish job obtains its PyPI OIDC token.
+permissions:
+  contents: read
+
 jobs:
-  release:
+  build:
+    name: Build distribution packages
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - name: Check out the release tag
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
         with:
-          python-version: '3.12'
-      - name: Install dependencies
+          python-version: "3.13"
+
+      - name: Confirm the tag matches the package version
+        # PyPI versions are immutable, so prevent a tag from republishing a different release's files.
         run: |
-          python -m pip install --upgrade pip
-          pip install setuptools wheel twine
-      - name: Build the dist files
-        run: python setup.py sdist bdist_wheel
-      - name: Publish
-        env:
-          TWINE_USERNAME: "__token__"
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-        run: twine upload dist/*
+          python - <<'PY'
+          """Compare the checked-out package version with the pushed release tag."""
+          import os
+          from pathlib import Path
+
+          version_namespace = {}
+          version_file = Path("downloader_cli/__version__.py")
+          exec(version_file.read_text(encoding="utf-8"), version_namespace)
+
+          package_version = version_namespace["__version__"]
+          tag_version = os.environ["GITHUB_REF_NAME"].removeprefix("v")
+          if package_version != tag_version:
+              raise SystemExit(
+                  f"Release tag {tag_version!r} does not match "
+                  f"package version {package_version!r}."
+              )
+          PY
+
+      - name: Build distribution packages
+        # `build` creates both the wheel and source distribution in an isolated build environment.
+        run: |
+          python -m pip install --upgrade build twine
+          python -m build
+          twine check dist/*
+
+      - name: Store distribution packages
+        # The publishing job only receives these checked artifacts; it never runs project build code.
+        uses: actions/upload-artifact@v4
+        with:
+          name: pypi-distributions
+          path: dist/
+
+  publish:
+    name: Publish distribution packages to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      # Configure this protected environment as the matching PyPI Trusted Publisher.
+      name: pypi
+      url: https://pypi.org/p/downloader-cli
+    permissions:
+      # This narrowly scoped permission lets PyPI exchange GitHub's OIDC identity for a short-lived token.
+      id-token: write
+
+    steps:
+      - name: Download distribution packages
+        uses: actions/download-artifact@v5
+        with:
+          name: pypi-distributions
+          path: dist/
+
+      - name: Publish package distributions to PyPI
+        # Trusted Publishing deliberately omits credentials; PyPI verifies this workflow's OIDC identity.
+        uses: pypa/gh-action-pypi-publish@release/v1
